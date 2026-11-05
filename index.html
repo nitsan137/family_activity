@@ -259,6 +259,8 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
 #toast span{max-width:480px;background:var(--on-night);color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.45)}
 
 .boot{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center}
+.diag{margin-top:14px;max-width:460px;padding:12px 14px;border-radius:14px;background:var(--dusk);font-size:13.5px;color:var(--on-night-soft);text-align:start;word-break:break-word}
+.diag p+p{margin-top:6px}
 .boot-title{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9;color:var(--amber)}
 
 @media (max-width:350px){.hero-when{font-size:68px}.tile-art{height:92px;font-size:44px}}
@@ -289,7 +291,7 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
   var UI = {
     tab: 'week', me: '', filter: 'all', bankFilter: 'all', draft: null, busy: 0,
     modal: null, setup: false, setupForm: null, askWho: false, bootFailed: false, loadedAt: 0, pop: '',
-    code: '', needCode: false, triedCode: false, codeForm: null
+    code: '', needCode: false, triedCode: false, codeForm: null, diag: null
   };
 
   var MONTHS = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
@@ -572,12 +574,16 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
     // הגוף נשלח כטקסט פשוט, כדי שהדפדפן לא ישלח לפני כן בקשת הכנה ש-Apps Script לא עונה עליה
     return fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, redirect: 'follow' })
       .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function (data) {
-        if (!data || typeof data.ok !== 'boolean') throw new Error('unexpected answer');
-        return data;
+        return res.text().then(function (text) {
+          var data = null;
+          try { data = JSON.parse(text); } catch (e) { data = null; }
+          if (!res.ok || !data || typeof data.ok !== 'boolean') {
+            // מה שענה הוא לא הדלת: בדרך כלל הגרסה הישנה של Apps Script, או דף כניסה של Google
+            var seen = text.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 140);
+            throw new Error('תשובה שאינה מהדלת (HTTP ' + res.status + '): ' + (seen || 'ריקה'));
+          }
+          return data;
+        });
       });
   }
 
@@ -590,9 +596,14 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
     } else {
       var body = JSON.stringify(req);
       var urls = apiUrl ? [apiUrl] : API_URLS.slice();
+      var notes = [];
       var attempt = function (i) {
         return postJson(urls[i], body).then(function (data) { apiUrl = urls[i]; return data; }, function (err) {
+          // TypeError מגיע מהדפדפן עצמו: אין רשת, או שהבקשה נחסמה בדרך
+          var why = err && err.name === 'TypeError' ? 'הבקשה לא הגיעה ליעד (' + err.message + ')' : String((err && err.message) || err);
+          notes.push('כתובת ' + (API_URLS.indexOf(urls[i]) + 1) + ': ' + why);
           if (i + 1 < urls.length) return attempt(i + 1);
+          UI.diag = notes;
           throw err;
         });
       };
@@ -602,8 +613,10 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
       if (!data.ok) {
         var err = new Error(data.error || '');
         err.reason = data.reason || '';
+        if (err.reason !== 'code') UI.diag = ['הדלת ענתה בשגיאה: ' + (data.error || 'בלי פירוט')];
         throw err;
       }
+      UI.diag = null;
       T = data.tables;
       NOW = data.now;
       S = derive(data.hasCode);
@@ -1162,7 +1175,11 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
       return h('div', { class: 'boot' },
         h('div', { class: 'boot-title' }, 'חמישי משפחתי'),
         UI.bootFailed
-          ? [h('p', null, 'לא הצלחנו לטעון את הנתונים מהגיליון.'), h('button', { class: 'btn btn-main', onclick: boot }, 'לנסות שוב')]
+          ? [h('p', null, 'לא הצלחנו לטעון את הנתונים מהגיליון.'),
+             h('button', { class: 'btn btn-main', onclick: boot }, 'לנסות שוב'),
+             UI.diag && UI.diag.length ? h('div', { class: 'diag' },
+               h('p', null, 'מה קרה בפועל:'),
+               UI.diag.map(function (line) { return h('p', { dir: 'auto' }, line); })) : null]
           : h('p', { class: 'hint' }, 'טוענים את הרעיונות...'));
     }
     var inner;
