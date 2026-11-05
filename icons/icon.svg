@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#17143A"/>
+  <circle cx="256" cy="256" r="230" fill="#25215C"/>
+  <!-- crescent moon -->
+  <mask id="m">
+    <rect width="512" height="512" fill="#fff"/>
+    <circle cx="300" cy="214" r="118" fill="#000"/>
+  </mask>
+  <circle cx="236" cy="268" r="142" fill="#FFB52E" mask="url(#m)"/>
+  <!-- heart sitting in the moon -->
+  <path transform="translate(236 168) scale(5.6)" fill="#FF3D6E"
+        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+  <!-- stars -->
+  <circle cx="386" cy="352" r="9" fill="#FFE6AE"/>
+  <circle cx="150" cy="124" r="6" fill="#FFE6AE"/>
+  <circle cx="346" cy="398" r="5" fill="#B5B0E8"/>
+</svg>

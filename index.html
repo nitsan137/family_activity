@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>חמישי משפחתי</title>
+<meta name="description" content="מה עושים ביום חמישי בערב: רעיונות, הצבעה משפחתית והיסטוריה">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#17143A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="חמישי">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Karantina:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#17143A; --dusk:#25215C; --dusk-hi:#39348A;
+  --paper:#FFFCF2; --ink:#17143A; --ink-soft:#5E5A80; --line:#E3DDF5;
+  --amber:#FFB52E; --amber-soft:#FFE6AE;
+  --mint:#27BFA3; --mint-soft:#C6F1E7;
+  --heart:#FF3D6E; --danger:#B81440;
+  --on-night:#F0EEFF; --on-night-soft:#B5B0E8;
+  --font:'Fredoka','Rubik','Heebo','Arial Hebrew',Arial,sans-serif;
+  --display:'Karantina','Fredoka','Arial Hebrew',Arial,sans-serif;
+  --emoji:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;
+}
+*{box-sizing:border-box}
+html{direction:rtl;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--on-night);font-family:var(--font);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit}
+button{color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:disabled{opacity:.4;cursor:default}
+h1,h2,h3,p,ol{margin:0}
+ol{padding:0;list-style:none}
+svg{display:block}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.pic{font-family:var(--emoji);line-height:1;white-space:nowrap}
+
+/* מסגרת */
+.shell{max-width:520px;margin:0 auto;padding:env(safe-area-inset-top) 16px 170px;min-height:100vh}
+.demo{margin:0 -16px;padding:8px 16px;background:var(--amber);color:var(--ink);font-size:14px;font-weight:500;text-align:center}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 4px}
+.top h1{font-size:17px;font-weight:600;color:var(--on-night-soft)}
+.top-end{display:flex;align-items:center;gap:8px}
+.round{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--dusk)}
+.round svg{width:22px;height:22px;fill:var(--on-night-soft)}
+.me{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:99px;background:var(--dusk);font-weight:500}
+.me .pic{font-size:22px}
+.bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:70;display:none;background:linear-gradient(90deg,transparent,var(--amber),transparent) no-repeat;background-size:50% 100%;animation:slide 1s linear infinite}
+body.busy .bar{display:block}
+@keyframes slide{from{background-position:150% 0}to{background-position:-50% 0}}
+
+/* פתיח השבוע */
+.hero{position:relative;padding:14px 0 6px}
+.hero-when{font-family:var(--display);font-weight:700;font-size:84px;line-height:.86;color:var(--amber)}
+.hero-date{font-size:19px;font-weight:500;margin-top:10px}
+.hero-tie{font-size:14.5px;color:var(--on-night-soft);margin-top:4px}
+.moon{position:absolute;top:18px;left:6px;width:58px;height:58px;border-radius:50%;box-shadow:inset 15px -7px 0 0 var(--amber-soft);transform:rotate(-18deg)}
+.moon::after{content:"";position:absolute;top:-6px;left:74px;width:4px;height:4px;border-radius:50%;background:var(--on-night);box-shadow:26px 34px 0 -1px var(--on-night-soft),62px 4px 0 0 var(--on-night-soft),10px 72px 0 -1px var(--on-night)}
+
+/* כותרות ואזורים */
+.sec{margin-top:26px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sec-head h2,.page-head h2{font-size:22px;font-weight:600}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 12px}
+.hint{font-size:14.5px;color:var(--on-night-soft)}
+.gap{margin-top:12px}
+.panel{background:var(--dusk);border-radius:20px;padding:16px}
+.panel h3{font-size:17px;font-weight:600;margin-bottom:8px}
+.pips{display:flex;gap:4px}
+.pips svg{width:24px;height:24px;fill:var(--heart)}
+.pips .used svg{fill:none;stroke:var(--on-night-soft);stroke-width:2}
+
+/* הודעות קצרות בראש המסך: התקנה וקוד משפחתי */
+.notice{display:flex;align-items:center;gap:10px;background:var(--dusk);border:1.5px solid var(--dusk-hi);border-radius:18px;padding:10px 14px;margin-top:12px;font-size:14.5px}
+.notice p{flex:1}
+.notice .btn{flex:none;min-height:42px;padding:0 14px;font-size:15px}
+.notice .x{background:none;width:36px;height:36px}
+.notice .x svg{fill:var(--on-night-soft)}
+.steps{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.steps li{display:flex;align-items:flex-start;gap:10px}
+.steps b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--amber-soft);display:grid;place-items:center;font-size:15px}
+
+/* סינון */
+.chips{display:flex;gap:8px;margin-bottom:14px}
+.chip{display:flex;align-items:center;gap:6px;min-height:42px;padding:0 15px;border-radius:99px;border:1.5px solid var(--dusk-hi);font-weight:500;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--on-night);color:var(--ink);border-color:var(--on-night)}
+
+/* אריחי ההצבעה */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{position:relative;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border-radius:22px;overflow:hidden}
+.tile.picked{box-shadow:0 0 0 4px var(--heart)}
+.tile-main{flex:1;display:flex;flex-direction:column;width:100%}
+.tile-art{height:108px;display:grid;place-items:center;font-size:52px;letter-spacing:2px;background:var(--amber-soft)}
+.tile.out .tile-art{background:var(--mint-soft)}
+.tile-title{flex:1;padding:10px 12px 0;font-weight:600;font-size:16px;line-height:1.25}
+.tile-foot{display:flex;align-items:center;justify-content:space-between;padding:4px 12px 10px}
+.tile-place{font-size:13px;color:var(--ink-soft)}
+.tile-heart svg{width:34px;height:34px;fill:none;stroke:var(--ink-soft);stroke-width:1.7}
+.tile.picked .tile-heart svg{fill:var(--heart);stroke:var(--heart)}
+.tile.pop .tile-heart svg{animation:pop .3s ease-out}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.tile-say{position:absolute;top:8px;right:8px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.72);display:grid;place-items:center}
+.tile-say svg{width:20px;height:20px;fill:var(--ink)}
+.tile-recent{position:absolute;top:10px;left:8px;background:var(--ink);color:var(--paper);font-size:11.5px;font-weight:500;padding:3px 8px;border-radius:99px}
+
+/* כפתורים */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 20px;border-radius:16px;font-weight:600;font-size:17px;border:2px solid transparent;text-align:center}
+.btn svg{width:22px;height:22px;fill:currentColor;flex:none}
+.btn-main{background:var(--amber);color:var(--ink)}
+.btn-main:active{transform:translateY(1px)}
+.btn-line{border-color:var(--dusk-hi);color:var(--on-night)}
+.btn-wide{display:flex;width:100%}
+.btn-text{min-height:44px;padding:0 4px;font-weight:500;font-size:15px;text-decoration:underline;text-underline-offset:3px}
+body.busy .btn-main{opacity:.6;pointer-events:none}
+.savebar{position:fixed;left:0;right:0;bottom:calc(68px + env(safe-area-inset-bottom));z-index:20;padding:12px 16px;pointer-events:none;background:linear-gradient(transparent,var(--night) 55%)}
+.savebar .btn{pointer-events:auto;max-width:488px;margin:0 auto;box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.savebar .btn svg{fill:var(--heart)}
+
+/* מי הצביע */
+.voters{display:flex;flex-wrap:wrap;gap:14px}
+.voter{width:58px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:13px;text-align:center;color:var(--on-night-soft)}
+.voter-face{position:relative;width:52px;height:52px;border-radius:50%;background:var(--dusk);display:grid;place-items:center;font-size:27px;opacity:.5}
+.voter.done{color:var(--on-night)}
+.voter.done .voter-face{opacity:1;box-shadow:0 0 0 3px var(--amber)}
+.voter-check{position:absolute;bottom:-4px;left:-4px;width:21px;height:21px;border-radius:50%;background:var(--amber);display:grid;place-items:center}
+.voter-check svg{width:15px;height:15px;fill:var(--ink)}
+
+/* תוצאות */
+.verdict{background:var(--amber);color:var(--ink);border-radius:18px;padding:14px 16px;font-weight:600;font-size:18px;margin-bottom:10px}
+.verdict small{display:block;font-weight:400;font-size:15px;margin-top:2px}
+.res{display:flex;flex-direction:column;gap:10px}
+.res li{display:flex;align-items:center;gap:12px;background:var(--dusk);border-radius:18px;padding:10px 12px}
+.res-pic{flex:none;width:62px;text-align:center;font-size:25px}
+.res-body{flex:1;min-width:0}
+.res-title{font-weight:600}
+.res-bar{height:8px;border-radius:99px;background:var(--dusk-hi);margin:6px 0;overflow:hidden}
+.res-bar i{display:block;height:100%;border-radius:99px;background:var(--on-night-soft)}
+.res li.win .res-bar i{background:var(--amber)}
+.res-who{font-size:17px;letter-spacing:3px}
+.res-n{flex:none;width:30px;text-align:center;font-family:var(--display);font-weight:700;font-size:44px;line-height:1}
+.res li.win .res-n{color:var(--amber)}
+.mix{border:1.5px dashed var(--on-night-soft);border-radius:18px;padding:12px 16px;margin-top:10px;font-size:15px}
+
+/* שורות על נייר: רעיונות ומשפחה */
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:12px;width:100%;background:var(--paper);color:var(--ink);border-radius:18px;padding:10px 14px 10px 12px}
+.row-art{flex:none;width:64px;height:60px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:var(--amber-soft)}
+.row.out .row-art{background:var(--mint-soft)}
+.row.person .row-art{width:60px;background:var(--line);font-size:32px;border-radius:50%}
+.row.off{opacity:.6}
+.row-body{flex:1;min-width:0}
+.row-body>span{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.row-title{font-weight:600;font-size:16.5px;line-height:1.3}
+.row-note,.row-meta{font-size:13.5px;color:var(--ink-soft)}
+.row-meta a{color:var(--ink);font-weight:500}
+.row-edit{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.row-edit svg{width:20px;height:20px;fill:var(--ink-soft)}
+
+/* היסטוריה: כרטיסי כניסה */
+.ticket{display:flex;background:var(--paper);color:var(--ink);border-radius:18px;overflow:hidden}
+.ticket-date{flex:none;width:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;background:var(--amber-soft);border-left:2px dashed rgba(23,20,58,.28)}
+.ticket.out .ticket-date{background:var(--mint-soft)}
+.ticket.combo .ticket-date{background:linear-gradient(var(--amber-soft) 50%,var(--mint-soft) 50%)}
+.ticket-day{font-family:var(--display);font-weight:700;font-size:46px;line-height:.9}
+.ticket-mon{font-size:13px;font-weight:500;text-align:center}
+.ticket-body{flex:1;min-width:0;padding:12px 14px 10px}
+.ticket-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.ticket-pics{font-size:24px;letter-spacing:2px}
+.ticket-title{font-weight:600;font-size:16.5px;line-height:1.3}
+.ticket-note{font-size:14.5px;color:var(--ink-soft);margin-top:2px}
+.ticket-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 8px;margin-top:6px}
+.ticket .btn-text{font-size:13.5px;color:var(--ink-soft);min-height:36px}
+.tag{flex:none;font-size:12.5px;font-weight:500;padding:2px 10px;border-radius:99px;background:var(--amber-soft)}
+.tag.out{background:var(--mint-soft)}
+.tag.combo{background:linear-gradient(90deg,var(--mint-soft) 50%,var(--amber-soft) 50%)}
+.stars{display:flex;margin:0 -4px}
+.stars button{width:34px;height:40px;display:grid;place-items:center}
+.stars svg{width:27px;height:27px;fill:none;stroke:var(--ink-soft);stroke-width:1.5}
+.stars button.on svg{fill:var(--amber);stroke:#C98200}
+.avg{font-size:13.5px;color:var(--ink-soft)}
+.hits li{display:flex;align-items:center;gap:10px;padding:6px 0}
+.hits .pic{font-size:22px}
+.hits-n{font-family:var(--display);font-weight:700;font-size:30px;line-height:1;color:var(--amber);width:16px}
+.hits-t{flex:1;font-weight:500}
+.hits-s{color:var(--on-night-soft);font-size:14.5px}
+
+/* הגדרות */
+.setting{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stepper{display:flex;align-items:center;gap:6px;font-weight:600;font-size:20px}
+.stepper span{min-width:28px;text-align:center}
+.stepper button{width:44px;height:44px;border-radius:50%;background:var(--dusk-hi);display:grid;place-items:center;font-size:24px;line-height:1}
+
+/* בחירת משתמש והקמה */
+.who{padding-top:30px}
+.who h2{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9;color:var(--amber)}
+.who>p{margin:10px 0 20px;color:var(--on-night-soft)}
+.faces{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.face{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 10px;border-radius:22px;background:var(--dusk);font-weight:600;font-size:19px;text-align:center}
+.face .pic{font-size:58px}
+.who-more{display:flex;justify-content:space-between;margin-top:14px}
+.added{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.added span.one{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--dusk);font-weight:500}
+.card{background:var(--paper);color:var(--ink);border-radius:22px;padding:16px;margin-bottom:12px}
+.card .input{margin-bottom:12px}
+
+/* חלונית תחתונה */
+.veil{position:fixed;top:0;bottom:0;left:0;right:0;z-index:50;background:rgba(9,7,30,.72);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:520px;max-height:90vh;overflow:auto;background:var(--paper);color:var(--ink);border-radius:28px 28px 0 0;padding:16px 18px calc(22px + env(safe-area-inset-bottom))}
+.sheet.in{animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(28px);opacity:0}}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sheet-head h2{font-size:22px;font-weight:600}
+.x{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(23,20,58,.07)}
+.x svg{width:22px;height:22px;fill:var(--ink)}
+.field{display:block;margin-bottom:14px}
+.field>span{display:block;font-size:14.5px;font-weight:500;color:var(--ink-soft);margin-bottom:6px}
+.input{display:block;width:100%;height:50px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink);padding:0 14px;font-size:17px}
+.input:focus{outline:none;border-color:var(--dusk-hi)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;border:2px solid var(--line);font-weight:600}
+.seg button[aria-pressed="true"]{border-color:var(--ink);background:var(--amber-soft)}
+.seg button.out[aria-pressed="true"]{background:var(--mint-soft)}
+.picrow{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.picbig{flex:none;width:104px;height:96px;border-radius:20px;display:grid;place-items:center;font-size:40px;letter-spacing:2px;background:var(--amber-soft)}
+.picbig.out{background:var(--mint-soft)}
+.pic-hint{display:block;font-size:14.5px;color:var(--ink-soft)}
+.emojis{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}
+.emojis button{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:24px}
+.emojis button[aria-pressed="true"]{background:var(--amber-soft);box-shadow:inset 0 0 0 2px var(--ink)}
+.picks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.pick{display:flex;align-items:center;gap:8px;min-height:46px;padding:6px 12px;border-radius:14px;border:2px solid var(--line);font-weight:500;font-size:15px;line-height:1.2}
+.pick .pic{font-size:20px}
+.pick[aria-pressed="true"]{border-color:var(--ink);background:var(--amber-soft)}
+.pick.out[aria-pressed="true"]{background:var(--mint-soft)}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;margin-bottom:14px;font-weight:500}
+.check input{width:22px;height:22px;accent-color:var(--ink)}
+.sheet-actions{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:6px}
+.danger{color:var(--danger)}
+.sheet .btn-line{border-color:var(--line);color:var(--ink)}
+
+/* ניווט תחתון */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--dusk);border-top:1px solid var(--dusk-hi);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav button{height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:500;color:var(--on-night-soft)}
+.nav .pic{font-size:22px;filter:grayscale(1);opacity:.7}
+.nav button[aria-current="page"]{color:var(--amber)}
+.nav button[aria-current="page"] .pic{filter:none;opacity:1}
+
+/* הודעה קצרה */
+#toast{position:fixed;left:16px;right:16px;top:calc(14px + env(safe-area-inset-top));z-index:80;display:flex;justify-content:center;pointer-events:none}
+#toast:empty{display:none}
+#toast span{max-width:480px;background:var(--on-night);color:var(--ink);padding:10px 16px;border-radius:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+
+.boot{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center}
+.boot-title{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9;color:var(--amber)}
+
+@media (max-width:350px){.hero-when{font-size:68px}.tile-art{height:92px;font-size:44px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function () {
+  'use strict';
+
+  /* ================= בסיס ================= */
+
+  // הכתובת של צד הגיליון (Google Apps Script). כל הנתונים נשמרים בגיליון של המשפחה.
+  var API_URL = 'https://script.google.com/macros/s/AKfycby5iU-zOV9UBh1NP5te_TEH7y5Q_ApMBBdq3lk1k0W8HErk3FIRmxJs4vyb_snjrqBi6w/exec';
+  var QUERY = (function () { try { return new URLSearchParams(window.location.search); } catch (e) { return null; } })();
+  function param(name) { return QUERY ? (QUERY.get(name) || '') : ''; }
+  // ?demo=1 פותח תצוגת הדגמה עם נתונים לדוגמה, בלי לגעת בגיליון
+  var REAL = !!API_URL && param('demo') !== '1';
+  var S = null; // המצב שהגיע מהגיליון
+  var UI = {
+    tab: 'week', me: '', filter: 'all', bankFilter: 'all', draft: null, busy: 0,
+    modal: null, setup: false, setupForm: null, askWho: false, bootFailed: false, loadedAt: 0, pop: '',
+    code: '', needCode: false, triedCode: false, codeForm: null
+  };
+
+  var MONTHS = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+  var DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+  var TYPE_NAME = { home: 'בבית', out: 'בחוץ', combo: 'משולב' };
+  var MEMBER_EMOJIS = ['🦁', '🦊', '🐼', '🦄', '🐯', '🐨', '🐸', '🐵', '🐶', '🐱', '🐰', '🐻', '🐧', '🦉', '🦋', '🐙', '🐬', '🦖', '🌈', '⭐', '🌸', '🍓', '⚡', '🚀', '👑', '🎸', '⚽', '🎀', '🍉', '🌻', '🐢', '🦒'];
+  var IDEA_EMOJIS = ['🎬', '🍿', '📺', '🎭', '🎤', '🎶', '🎲', '🧩', '🃏', '♟️', '🎮', '🎯', '🏆', '🎉', '💃', '🎈', '🎁', '⛺', '🛌', '🔥', '🔦', '🔭', '🌙', '🌟', '🍕', '🍔', '🍣', '🍝', '🌮', '🥙', '🍟', '🌭', '🥞', '🧇', '🍳', '🧁', '🍰', '🍪', '🍩', '🍫', '🍦', '🍧', '🥤', '☕', '🧺', '🍽️', '🍖', '🍓', '🌽', '🚶', '🥾', '🚲', '🛴', '🛹', '⚽', '🏀', '🎾', '🏓', '⛳', '🎳', '🏊', '🌊', '🏖️', '🌅', '🌳', '🌲', '🎠', '🎡', '🎪', '🦁', '🐠', '🐴', '🏛️', '📚', '📖', '🛍️', '🚂', '🛶', '🎣', '🧗', '🤸', '⛸️', '🏎️', '🎨', '✂️', '🔬', '🎩', '📸', '💅', '🧘', '🌱', '🏰', '👵', '🚗', '🏠', '🔐'];
+
+  var ICONS = {
+    heart: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+    star: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+    check: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
+    plus: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',
+    say: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z',
+    edit: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',
+    close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+    download: 'M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z',
+    lock: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z',
+    refresh: 'M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'
+  };
+
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) {
+      for (var k in attrs) {
+        var v = attrs[k];
+        if (k === 'value') { el.value = v; continue; }
+        if (k === 'checked') { el.checked = !!v; continue; }
+        if (v === null || v === undefined || v === false) continue;
+        if (k.slice(0, 2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2), v);
+        else if (k === 'class') el.className = v;
+        else if (v === true) el.setAttribute(k, '');
+        else el.setAttribute(k, v);
+      }
+    }
+    for (var i = 2; i < arguments.length; i++) put(el, arguments[i]);
+    return el;
+  }
+  function put(el, child) {
+    if (child === null || child === undefined || child === false) return;
+    if (Array.isArray(child)) { child.forEach(function (c) { put(el, c); }); return; }
+    el.appendChild(child.nodeType ? child : document.createTextNode(String(child)));
+  }
+  function icon(name) {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    var path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', ICONS[name]);
+    svg.appendChild(path);
+    return svg;
+  }
+
+  /* ================= תאריכים ================= */
+
+  function toDate(s) { var p = s.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function ymd(d) { return d.toISOString().slice(0, 10); }
+  function addDays(s, n) { var d = toDate(s); d.setUTCDate(d.getUTCDate() + n); return ymd(d); }
+  function diffDays(from, to) { return Math.round((toDate(to) - toDate(from)) / 86400000); }
+  function nextThursday(s) { return addDays(s, (4 - toDate(s).getUTCDay() + 7) % 7); }
+  function lastThursday(s) { return addDays(s, -((toDate(s).getUTCDay() - 4 + 7) % 7)); }
+  function shortDate(s) { var d = toDate(s); return d.getUTCDate() + ' ב' + MONTHS[d.getUTCMonth()]; }
+  function longDate(s) { return 'יום ' + DAYS[toDate(s).getUTCDay()] + ', ' + shortDate(s); }
+
+  /* ================= שליפות מהמצב ================= */
+
+  function member(id) { for (var i = 0; i < S.members.length; i++) if (S.members[i].id === id) return S.members[i]; return null; }
+  function me() { return UI.me ? member(UI.me) : null; }
+  function activeMembers() { return S.members.filter(function (m) { return m.active; }); }
+  function idea(id) { for (var i = 0; i < S.ideas.length; i++) if (S.ideas[i].id === id) return S.ideas[i]; return null; }
+  function liveIdeas() { return S.ideas.filter(function (i) { return !i.archived; }); }
+  function picsOf(i) { return i && i.pic ? i.pic.split(' ').filter(Boolean) : []; }
+  function mean(a) { return a.reduce(function (x, y) { return x + y; }, 0) / a.length; }
+  function fmt1(n) { return (Math.round(n * 10) / 10).toString(); }
+
+  function doneStats() {
+    var map = {};
+    S.history.forEach(function (x) {
+      x.ideaIds.forEach(function (id) {
+        var e = map[id] || (map[id] = { count: 0, last: '' });
+        e.count++;
+        if (x.date > e.last) e.last = x.date;
+      });
+    });
+    return map;
+  }
+  function isRecent(stat) {
+    if (!stat || !stat.last) return false;
+    var d = diffDays(stat.last, S.today);
+    return d >= 0 && d <= 28;
+  }
+  function votedMap() {
+    var map = {};
+    S.votes.forEach(function (v) { map[v.memberId] = true; });
+    return map;
+  }
+  function myVotes() {
+    return S.votes
+      .filter(function (v) { return v.memberId === UI.me; })
+      .map(function (v) { return v.ideaId; })
+      .filter(function (id) { var i = idea(id); return i && !i.archived; });
+  }
+  function currentDraft() { return UI.draft || myVotes(); }
+  function isDirty() {
+    if (!UI.draft) return false;
+    return UI.draft.slice().sort().join() !== myVotes().sort().join();
+  }
+  function ranking() {
+    var map = {};
+    S.votes.forEach(function (v) {
+      var m = member(v.memberId);
+      if (!m || !m.active) return;
+      (map[v.ideaId] || (map[v.ideaId] = [])).push(m);
+    });
+    return Object.keys(map)
+      .map(function (id) { return { idea: idea(id), voters: map[id] }; })
+      .filter(function (r) { return r.idea; })
+      .sort(function (a, b) { return b.voters.length - a.voters.length || a.idea.title.localeCompare(b.idea.title, 'he'); });
+  }
+  function isRevealed() {
+    var act = activeMembers();
+    var voted = votedMap();
+    return S.settings.revealedWeek === S.weekId || (act.length > 0 && act.every(function (m) { return voted[m.id]; }));
+  }
+  // מי מכריע בתיקו: מתחלף כל שבוע לפי סדר בני המשפחה
+  function decider() {
+    var act = activeMembers();
+    if (!act.length) return null;
+    var week = Math.floor(toDate(S.weekId).getTime() / (7 * 86400000));
+    return act[week % act.length];
+  }
+  function winnerIds() {
+    if (!isRevealed()) return [];
+    var rank = ranking();
+    if (!rank.length) return [];
+    var top = rank[0].voters.length;
+    var winners = rank.filter(function (r) { return r.voters.length === top; });
+    return winners.length === 1 ? [winners[0].idea.id] : [];
+  }
+  function hits() {
+    var agg = {};
+    S.history.forEach(function (x) {
+      var vals = Object.keys(x.ratings).filter(member).map(function (k) { return Number(x.ratings[k]); });
+      if (!vals.length) return;
+      var avg = mean(vals);
+      x.ideaIds.forEach(function (id) {
+        var a = agg[id] || (agg[id] = { sum: 0, n: 0 });
+        a.sum += avg; a.n++;
+      });
+    });
+    return Object.keys(agg)
+      .map(function (id) { return { idea: idea(id), avg: agg[id].sum / agg[id].n }; })
+      .filter(function (r) { return r.idea; })
+      .sort(function (a, b) { return b.avg - a.avg; })
+      .slice(0, 3);
+  }
+
+  /* ================= תמונה אוטומטית לפי שם הרעיון ================= */
+
+  // אותיות סופיות מנורמלות, כדי ש"חידון" יתאים גם ל"חידונים"
+  function plain(text) {
+    return String(text).replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ');
+  }
+  var PIC_PHRASES = [
+    ['חדר בריחה', '🔐'], ['גן חיות', '🦁'], ['פינת חי', '🐴'], ['גן שעשועים', '🎠'], ['לונה פארק', '🎡'],
+    ['על האש', '🍖'], ['פינג פונג', '🏓'], ['מיני גולף', '⛳'], ['משחקי קופסה', '🎲'], ['משחקי קופסא', '🎲'],
+    ['בית קפה', '☕'], ['קיר טיפוס', '🧗'], ['חפש את המטמון', '🎁'], ['סבא וסבתא', '👵']
+  ].map(function (p) { return [plain(p[0]), p[1]]; });
+  var PIC_WORDS = (function () {
+    var raw = [
+      ['🎬', 'סרט קולנוע'], ['🍿', 'פופקורן'], ['📺', 'טלוויזי טלויזי נטפליקס סדרה סדרות'],
+      ['🎭', 'הצגה הצגת תיאטרון תחפוש'], ['🎤', 'קריוקי הופעה הופעת מופע'], ['🎶', 'מוזיקה שירה שירים נגינה קונצרט'],
+      ['🎲', 'קופסה קופסא מונופול'], ['🧩', 'פאזל'], ['🃏', 'קלפים טאקי'], ['♟️', 'שחמט שח'],
+      ['🎮', 'פלייסטיישן קונסולה וידאו אקסבוקס נינטנדו'], ['🎯', 'חידון טריוויה בינגו לייזר פיינטבול חצים'],
+      ['🏆', 'תחרות טורניר אתגר אליפות'], ['🎉', 'מסיב חגיג'], ['💃', 'ריקוד לרקוד רוקדים דיסקו'], ['🎈', 'בלונ'], ['🎁', 'הפתע'],
+      ['⛺', 'אוהל קמפינג מחנה'], ['🛌', "פיג'מ פיגמ"], ['🔥', 'מדורה קומזיץ מרשמלו'], ['🍖', 'מנגל ברביקיו'], ['🍲', 'פויקה מרק'],
+      ['🔦', 'פנס'], ['🔭', 'טלסקופ כוכבים'], ['🌙', 'לילה לילי'],
+      ['🍕', 'פיצה פיצות פיצרי'], ['🍔', 'המבורגר'], ['🍣', 'סושי'], ['🍝', 'פסטה'], ['🌮', 'טאקו טורטיי'],
+      ['🥙', 'פלאפל חומוס שווארמה'], ['🍟', "צ'יפס ג'אנק"], ['🌭', 'נקניקי'], ['🥞', 'פנקייק קרפ'], ['🧇', 'וופל'],
+      ['🍳', 'מבשל בישול לבשל מכינ חביתה שף'], ['🧁', 'אפיי לאפות אופים אופות מאפ קאפקייק'],
+      ['🍰', 'עוגה עוגת עוגות'], ['🍪', 'עוגיות עוגיי'], ['🍩', 'סופגני דונאט'], ['🍫', 'שוקולד'],
+      ['🍦', 'גלידה גלידות גלידר'], ['🍧', 'ברד'], ['🥤', 'שייק מילקשייק'], ['☕', 'קפה שוקו'], ['🧺', 'פיקניק'],
+      ['🍽️', 'מסעדה מסעדת ארוחה ארוחת'], ['🍓', 'קטיף תות'], ['🌽', 'תירס'],
+      ['🚶', 'טיול הליכה לטייל מטיילים'], ['🥾', 'מסלול'], ['🚲', 'אופניים אופני'], ['🛴', 'קורקינט'], ['🛹', 'סקייט רולר גלגיליות'],
+      ['⚽', 'כדורגל'], ['🏀', 'כדורסל'], ['🎾', 'טניס'], ['⛳', 'גולף'], ['🎳', 'באולינג'],
+      ['🏊', 'בריכה בריכת שחיי לשחות'], ['🌊', 'ים'], ['🏖️', 'חוף'], ['🌅', 'שקיעה שקיעת זריחה'], ['🌳', 'פארק'], ['🌲', 'יער'],
+      ['🎡', 'לונה'], ['🎪', 'קרקס'], ['🦁', 'ספארי'], ['🐠', 'אקווריום'], ['🐴', 'סוס סוסים'], ['🏛️', 'מוזיאון'],
+      ['📚', 'ספריי ספריה'], ['📖', 'סיפור ספר קריאה'], ['🛍️', 'קניון קניות שוק'], ['🚂', 'רכבת'], ['🛶', 'סירה קיאק שייט'],
+      ['🎣', 'דיג'], ['🧗', 'טיפוס'], ['🤸', "טרמפולינ ג'ימבורי ספורט כושר התעמלות"], ['⛸️', 'החלקה קרח'], ['🏎️', 'קארטינג באגי'],
+      ['🎨', 'ציור לצייר מציירים צביעה צבעים'], ['✂️', 'יצירה יצירות'], ['🔬', 'מדע ניסוי'], ['🎩', 'קסמ'],
+      ['📸', 'צילום תמונות אלבום'], ['💅', 'ספא איפור לק'], ['🧘', 'יוגה'], ['🌱', 'גינה גינון שתיל'], ['🏰', 'מבצר'],
+      ['👵', 'סבא סבתא'], ['🚗', 'נסיעה'], ['🌟', 'קסום']
+    ];
+    var list = [];
+    raw.forEach(function (pair) {
+      pair[1].split(' ').forEach(function (stem) { list.push([plain(stem), pair[0]]); });
+    });
+    list.sort(function (a, b) { return b[0].length - a[0].length; });
+    return list;
+  })();
+  var PREFIXES = 'בלהומשכ';
+
+  function lookupWord(word) {
+    for (var k = 0; k < PIC_WORDS.length; k++) {
+      var stem = PIC_WORDS[k][0];
+      if (stem.length <= 2 ? word === stem : word.indexOf(stem) === 0) return PIC_WORDS[k][1];
+    }
+    return '';
+  }
+  // מחזיר עד שתי תמונות שמתאימות למילים בשם הרעיון. רשימה ריקה אם לא נמצאה התאמה.
+  function autoPic(title) {
+    var text = ' ' + plain(String(title || '').replace(/[׳’`]/g, "'").replace(/[.,!?()"״:;\/\-]/g, ' ')) + ' ';
+    var found = [];
+    var general = false; // "משחק" בלי פירוט: קובייה, רק אם לא נמצא משהו מדויק יותר
+    function add(e) { if (found.indexOf(e) < 0) found.push(e); }
+    PIC_PHRASES.forEach(function (p) {
+      if (text.indexOf(p[0]) >= 0) { add(p[1]); text = text.split(p[0]).join(' '); }
+    });
+    text.split(/\s+/).forEach(function (w) {
+      if (!w) return;
+      var cands = [w];
+      if (w.length > 2 && PREFIXES.indexOf(w.charAt(0)) >= 0) {
+        cands.push(w.slice(1));
+        if (w.length > 3 && PREFIXES.indexOf(w.charAt(1)) >= 0) cands.push(w.slice(2));
+      }
+      for (var c = 0; c < cands.length; c++) {
+        var hit = lookupWord(cands[c]);
+        if (hit) { add(hit); return; }
+      }
+      if (plain(w).indexOf('משחק') >= 0) general = true;
+    });
+    if (!found.length && general) found.push('🎲');
+    return found.slice(0, 2);
+  }
+  function placePic(place) { return place === 'out' ? '🌳' : '🏠'; }
+
+  /* ================= הקראה בקול, למי שעוד לא קורא ================= */
+
+  var CAN_SAY = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+  function checkVoices() {
+    try {
+      var voices = window.speechSynthesis.getVoices();
+      if (!voices || !voices.length) return; // עוד לא נטען, או שהמכשיר לא מפרט. משאירים את הכפתור.
+      var hebrew = voices.some(function (v) { return /^(he|iw)/i.test(v.lang || ''); });
+      if (hebrew !== CAN_SAY) { CAN_SAY = hebrew; if (S && !UI.modal) render(); }
+    } catch (e) { /* מתעלמים */ }
+  }
+  if (CAN_SAY) {
+    checkVoices();
+    try { window.speechSynthesis.addEventListener('voiceschanged', checkVoices); } catch (e) { /* דפדפן ישן */ }
+  }
+  function say(text) {
+    try {
+      window.speechSynthesis.cancel();
+      var u = new window.SpeechSynthesisUtterance(text);
+      u.lang = 'he-IL';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* אין הקראה במכשיר הזה */ }
+  }
+
+  /* ================= תקשורת עם הגיליון ================= */
+
+  function rpc(action, payload) {
+    if (!REAL) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          try { resolve(demoApi(action, payload || {})); } catch (e) { reject(e); }
+        }, 150);
+      });
+    }
+    // הגוף נשלח כטקסט פשוט, כדי שהדפדפן לא ישלח לפני כן בקשת הכנה ש-Apps Script לא עונה עליה
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: action, payload: payload || {}, code: UI.code }),
+      redirect: 'follow'
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (data) {
+      if (data && data.ok) return data;
+      var err = new Error((data && data.error) || '');
+      err.reason = (data && data.reason) || '';
+      throw err;
+    });
+  }
+
+  // מריץ פעולה, מעדכן את המצב ומצייר מחדש. מחזיר null אם הפעולה נכשלה (אחרי הודעה למשתמש).
+  function call(action, payload) {
+    UI.busy++;
+    document.body.classList.add('busy');
+    return rpc(action, payload).then(function (res) {
+      S = res.state;
+      UI.loadedAt = Date.now();
+      return res;
+    }, function (err) {
+      if (err && err.reason === 'code') {
+        // אין קוד במכשיר הזה, או שהקוד הוחלף: מבקשים אותו מחדש
+        UI.needCode = true;
+        saveCode('');
+        if (UI.triedCode) toast('הקוד לא מתאים. מנסים שוב?');
+        return null;
+      }
+      if (window.console) console.error(err);
+      var msg = err && err.message ? String(err.message).replace(/^(Error|Exception):\s*/, '') : '';
+      toast(msg && /[֐-׿]/.test(msg) ? msg : 'הפעולה לא הצליחה. בדקו את החיבור ונסו שוב.');
+      return null;
+    }).then(function (res) {
+      UI.busy--;
+      if (!UI.busy) document.body.classList.remove('busy');
+      render();
+      return res;
+    });
+  }
+
+  var toastTimer = null;
+  function toast(text) {
+    var box = document.getElementById('toast');
+    box.replaceChildren(h('span', null, text));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { box.replaceChildren(); }, 2800);
+  }
+
+  function loadCode() { try { return window.localStorage.getItem('thursday_code') || ''; } catch (e) { return ''; } }
+  function saveCode(code) {
+    try {
+      if (code) window.localStorage.setItem('thursday_code', code); else window.localStorage.removeItem('thursday_code');
+    } catch (e) { /* בלי שמירה מקומית */ }
+  }
+  function flag(name, value) {
+    try {
+      if (value === undefined) return window.localStorage.getItem(name) === '1';
+      window.localStorage.setItem(name, value ? '1' : '');
+    } catch (e) { /* בלי שמירה מקומית */ }
+    return !!value;
+  }
+  function loadMe() { try { return window.localStorage.getItem('thursday_me') || ''; } catch (e) { return ''; } }
+  function saveMe(id) { try { window.localStorage.setItem('thursday_me', id); } catch (e) { /* בלי שמירה מקומית */ } }
+  function setMe(id) {
+    UI.me = id; UI.askWho = false; UI.draft = null;
+    saveMe(id);
+    render();
+  }
+
+  /* ================= פעולות ================= */
+
+  function toggleVote(id) {
+    var who = me();
+    if (who && !who.active) { toast('סימנתם ש' + who.name + ' לא בהצבעות כרגע. אפשר לשנות בלשונית משפחה.'); return; }
+    var d = currentDraft().slice();
+    var at = d.indexOf(id);
+    if (at >= 0) {
+      d.splice(at, 1);
+    } else {
+      if (d.length >= S.settings.votesPerPerson) { toast('נגמרו הלבבות. מורידים לב מרעיון אחר כדי להחליף.'); return; }
+      d.push(id);
+      UI.pop = id;
+    }
+    UI.draft = d;
+    render();
+    UI.pop = '';
+  }
+  function saveVotes() {
+    call('setVotes', { memberId: UI.me, ideaIds: currentDraft() }).then(function (res) {
+      if (!res) return;
+      UI.draft = null;
+      toast('ההצבעה נשמרה');
+      render();
+    });
+  }
+  function rate(x, stars) {
+    var mine = x.ratings[UI.me] || 0;
+    call('rate', { historyId: x.id, memberId: UI.me, stars: mine === stars ? 0 : stars });
+  }
+  function closeModal() { UI.modal = null; render(); }
+
+  function openIdea(i) {
+    UI.modal = i
+      ? { type: 'idea', id: i.id, title: i.title, place: i.place, note: i.note || '', pics: picsOf(i), manual: true, picker: false, fresh: true }
+      : { type: 'idea', id: '', title: '', place: UI.bankFilter === 'out' ? 'out' : 'home', note: '', pics: [], manual: false, picker: false, fresh: true };
+    render();
+  }
+  function shownPics(m) { return m.pics.length ? m.pics : [placePic(m.place)]; }
+  function saveIdea() {
+    var m = UI.modal;
+    var title = m.title.trim();
+    if (!title) { toast('כתבו מה עושים'); return; }
+    var data = { title: title, place: m.place, note: m.note, pic: shownPics(m).join(' ') };
+    if (m.id) data.id = m.id; else data.addedBy = UI.me;
+    call(m.id ? 'updateIdea' : 'addIdea', data).then(function (res) {
+      if (!res) return;
+      UI.modal = null;
+      toast('הרעיון נשמר');
+      render();
+    });
+  }
+  function removeIdea() {
+    var m = UI.modal;
+    call('updateIdea', { id: m.id, archived: true }).then(function (res) {
+      if (!res) return;
+      UI.modal = null;
+      if (UI.draft) UI.draft = UI.draft.filter(function (id) { return id !== m.id; });
+      toast('הרעיון הוסר מהרשימה');
+      render();
+    });
+  }
+
+  function openMember(m) {
+    UI.modal = m
+      ? { type: 'member', id: m.id, name: m.name, emoji: m.emoji, active: m.active, fresh: true }
+      : { type: 'member', id: '', name: '', emoji: freeEmoji(), active: true, fresh: true };
+    render();
+  }
+  function freeEmoji() {
+    var used = S.members.map(function (m) { return m.emoji; });
+    for (var i = 0; i < MEMBER_EMOJIS.length; i++) if (used.indexOf(MEMBER_EMOJIS[i]) < 0) return MEMBER_EMOJIS[i];
+    return MEMBER_EMOJIS[0];
+  }
+  function saveMember() {
+    var m = UI.modal;
+    var name = m.name.trim();
+    if (!name) { toast('כתבו שם'); return; }
+    var p = m.id
+      ? call('updateMember', { id: m.id, name: name, emoji: m.emoji, active: m.active })
+      : call('addMember', { name: name, emoji: m.emoji });
+    p.then(function (res) {
+      if (!res) return;
+      UI.modal = null;
+      toast('נשמר');
+      render();
+    });
+  }
+  function addSetupMember() {
+    var f = UI.setupForm;
+    var name = f.name.trim();
+    if (!name) { toast('כתבו שם'); return; }
+    call('addMember', { name: name, emoji: f.emoji }).then(function (res) {
+      if (!res) return;
+      UI.setupForm = { name: '', emoji: freeEmoji() };
+      render();
+    });
+  }
+
+  function openDone(preselected) {
+    var date = lastThursday(S.today);
+    UI.modal = { type: 'done', date: date, ideaIds: preselected.slice(0, 2), note: '', otherOpen: false, otherTitle: '', otherPlace: 'home', fresh: true };
+    render();
+  }
+  function saveDone() {
+    var m = UI.modal;
+    var ids = m.ideaIds.slice();
+    var other = m.otherOpen ? m.otherTitle.trim() : '';
+    if (!ids.length && !other) { toast('בחרו מה עשיתם'); return; }
+    if (ids.length + (other ? 1 : 0) > 2) { toast('אפשר לשלב עד שני רעיונות בערב אחד'); return; }
+    var ready = Promise.resolve(true);
+    if (other) {
+      var pics = autoPic(other);
+      ready = call('addIdea', { title: other, place: m.otherPlace, pic: (pics.length ? pics : [placePic(m.otherPlace)]).join(' '), addedBy: UI.me })
+        .then(function (res) {
+          if (!res) return false;
+          ids.push(res.created);
+          m.otherOpen = false; m.otherTitle = ''; m.ideaIds = ids.slice();
+          return true;
+        });
+    }
+    ready.then(function (ok) {
+      if (!ok) return;
+      call('markDone', { date: m.date, ideaIds: ids, note: m.note, createdBy: UI.me }).then(function (res) {
+        if (!res) return;
+        UI.modal = null;
+        UI.draft = null;
+        toast('הערב נשמר בהיסטוריה');
+        render();
+      });
+    });
+  }
+  function askDelete(x) {
+    UI.modal = {
+      type: 'confirm', fresh: true,
+      title: 'למחוק את הערב הזה?',
+      text: x.titles + ', ' + shortDate(x.date) + '. המחיקה מסירה אותו מההיסטוריה יחד עם הדירוגים.',
+      yes: 'מחיקה מההיסטוריה',
+      run: function () {
+        call('deleteHistory', { id: x.id }).then(function (res) {
+          if (!res) return;
+          UI.modal = null;
+          toast('הערב נמחק מההיסטוריה');
+          render();
+        });
+      }
+    };
+    render();
+  }
+
+  function submitCode() {
+    var value = (UI.codeForm ? UI.codeForm.value : '').trim();
+    if (!value) { toast('מקלידים את הקוד המשפחתי'); return; }
+    UI.code = value;
+    UI.needCode = false;
+    UI.triedCode = true;
+    call('getState').then(afterLoad);
+  }
+  function openCode() {
+    UI.modal = { type: 'code', value: '', fresh: true };
+    render();
+  }
+  function saveFamilyCode() {
+    var m = UI.modal;
+    var value = m.value.trim();
+    if (!/^[0-9A-Za-z\u0590-\u05FF]{4,30}$/.test(value)) { toast('הקוד צריך להיות 4 תווים לפחות, אותיות וספרות בלבד'); return; }
+    call('setFamilyCode', { code: value }).then(function (res) {
+      if (!res) return;
+      UI.code = value;
+      saveCode(value);
+      UI.modal = null;
+      toast('הקוד המשפחתי נשמר');
+      render();
+    });
+  }
+
+  /* ================= התקנה על מסך הבית ================= */
+
+  var NAV = window.navigator || {};
+  var standalone = !!((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || NAV.standalone === true);
+  var isIOS = /iphone|ipad|ipod/i.test(NAV.userAgent || '') || (NAV.platform === 'MacIntel' && NAV.maxTouchPoints > 1);
+  var isAndroid = /android/i.test(NAV.userAgent || '');
+  var installEvent = null; // הדפדפן מוסר אותו כשאפשר להציע התקנה בלחיצה (Chrome, Edge, סמסונג)
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    installEvent = e;
+    if (S) render();
+  });
+  window.addEventListener('appinstalled', function () {
+    installEvent = null;
+    standalone = true;
+    toast('האפליקציה הותקנה');
+    if (S) render();
+  });
+  function canInstall() { return REAL && !standalone && (!!installEvent || isIOS || isAndroid); }
+  function install() {
+    if (installEvent) {
+      var ev = installEvent;
+      ev.prompt();
+      if (ev.userChoice && ev.userChoice.then) ev.userChoice.then(function () { installEvent = null; render(); });
+      return;
+    }
+    UI.modal = { type: 'install', fresh: true };
+    render();
+  }
+
+  /* ================= מסכים ================= */
+
+  function render() {
+    var root = document.getElementById('app');
+    var oldSheet = root.querySelector('.sheet');
+    var sheetScroll = oldSheet ? oldSheet.scrollTop : 0;
+    var fresh = !!(UI.modal && UI.modal.fresh);
+    root.replaceChildren(view());
+    var newSheet = root.querySelector('.sheet');
+    if (newSheet && !fresh) newSheet.scrollTop = sheetScroll;
+    if (newSheet && fresh) {
+      var first = newSheet.querySelector('[data-focus]');
+      if (first) first.focus();
+    }
+  }
+
+  function view() {
+    if (UI.needCode) return h('div', { class: 'shell' }, codeView());
+    if (!S) {
+      return h('div', { class: 'boot' },
+        h('div', { class: 'boot-title' }, 'חמישי משפחתי'),
+        UI.bootFailed
+          ? [h('p', null, 'לא הצלחנו לטעון את הנתונים מהגיליון.'), h('button', { class: 'btn btn-main', onclick: boot }, 'לנסות שוב')]
+          : h('p', { class: 'hint' }, 'טוענים את הרעיונות...'));
+    }
+    var inner;
+    if (!S.members.length || UI.setup) inner = [setupView()];
+    else if (!me() || UI.askWho) inner = [whoView()];
+    else inner = [headerView(), tabView(), navView()];
+    return h('div', { class: 'shell' },
+      REAL ? null : h('div', { class: 'demo' }, 'תצוגת הדגמה: הנתונים כאן לדוגמה ולא נשמרים.'),
+      inner,
+      UI.modal ? modalView() : null);
+  }
+
+  function codeView() {
+    var f = UI.codeForm || (UI.codeForm = { value: '' });
+    return h('main', { class: 'who' },
+      h('h2', null, 'קוד משפחתי'),
+      h('p', null, 'האפליקציה שמורה למשפחה. מקלידים את הקוד פעם אחת, והמכשיר הזה זוכר.'),
+      h('div', { class: 'card' },
+        h('input', {
+          class: 'input', type: 'text', maxlength: '30', placeholder: 'הקוד', 'aria-label': 'קוד משפחתי',
+          autocomplete: 'off', autocapitalize: 'off', value: f.value,
+          oninput: function (e) { f.value = e.target.value; },
+          onkeydown: function (e) { if (e.key === 'Enter') submitCode(); }
+        }),
+        h('button', { class: 'btn btn-main btn-wide', onclick: submitCode }, icon('lock'), 'כניסה')));
+  }
+
+  function setupView() {
+    var f = UI.setupForm || (UI.setupForm = { name: '', emoji: freeEmoji() });
+    return h('main', { class: 'who' },
+      h('h2', null, 'מי במשפחה?'),
+      h('p', null, 'מוסיפים את כל מי שמצביע. לכל אחד בוחרים דמות, כך שגם מי שעוד לא קורא מוצא את עצמו.'),
+      S.members.length ? h('div', { class: 'added' }, S.members.map(function (m) {
+        return h('span', { class: 'one' }, h('span', { class: 'pic' }, m.emoji), m.name);
+      })) : null,
+      h('div', { class: 'card' },
+        emojiGrid(MEMBER_EMOJIS, [f.emoji], function (e) { f.emoji = e; render(); }, 'בחירת דמות'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '30', placeholder: 'שם', 'aria-label': 'שם', value: f.name,
+          oninput: function (e) { f.name = e.target.value; },
+          onkeydown: function (e) { if (e.key === 'Enter') addSetupMember(); }
+        }),
+        h('button', { class: 'btn btn-main btn-wide', onclick: addSetupMember }, icon('plus'), 'הוספה למשפחה')),
+      S.members.length
+        ? h('button', { class: 'btn btn-line btn-wide', onclick: function () { UI.setup = false; UI.setupForm = null; render(); } }, 'סיימנו, ממשיכים')
+        : null);
+  }
+
+  function whoView() {
+    return h('main', { class: 'who' },
+      h('h2', null, 'מי כאן?'),
+      h('p', null, 'בוחרים פעם אחת, והטלפון הזה זוכר.'),
+      h('div', { class: 'faces' }, S.members.map(function (m) {
+        return h('button', { class: 'face', onclick: function () { setMe(m.id); } }, h('span', { class: 'pic' }, m.emoji), m.name);
+      })),
+      h('div', { class: 'who-more' },
+        h('button', { class: 'btn-text', onclick: function () { openMember(null); } }, 'הוספת בן או בת משפחה'),
+        me() ? h('button', { class: 'btn-text', onclick: function () { UI.askWho = false; render(); } }, 'חזרה') : null));
+  }
+
+  function headerView() {
+    var m = me();
+    return h('header', { class: 'top' },
+      h('h1', null, 'חמישי משפחתי'),
+      h('div', { class: 'top-end' },
+        h('button', { class: 'round', 'aria-label': 'רענון הנתונים', onclick: function () { call('getState'); } }, icon('refresh')),
+        h('button', { class: 'me', 'aria-label': 'החלפת משתמש. עכשיו: ' + m.name, onclick: function () { UI.askWho = true; render(); } },
+          h('span', { class: 'pic' }, m.emoji), m.name)));
+  }
+
+  function navView() {
+    var tabs = [['week', '🗳️', 'השבוע'], ['bank', '💡', 'רעיונות'], ['history', '🎟️', 'היסטוריה'], ['family', '🏡', 'משפחה']];
+    return h('nav', { class: 'nav', 'aria-label': 'ניווט ראשי' }, h('div', { class: 'nav-in' }, tabs.map(function (t) {
+      return h('button', {
+        'aria-current': UI.tab === t[0] ? 'page' : null,
+        onclick: function () { UI.tab = t[0]; render(); window.scrollTo(0, 0); }
+      }, h('span', { class: 'pic' }, t[1]), t[2]);
+    })));
+  }
+
+  function tabView() {
+    if (UI.tab === 'bank') return bankView();
+    if (UI.tab === 'history') return historyView();
+    if (UI.tab === 'family') return familyView();
+    return weekView();
+  }
+
+  function placeChips(current, onPick) {
+    var opts = [['all', '', 'הכל'], ['home', '🏠', 'בבית'], ['out', '🌳', 'בחוץ']];
+    return h('div', { class: 'chips', role: 'group', 'aria-label': 'סינון לפי מקום' }, opts.map(function (o) {
+      return h('button', { class: 'chip', 'aria-pressed': String(current === o[0]), onclick: function () { onPick(o[0]); } },
+        o[1] ? h('span', { class: 'pic' }, o[1]) : null, o[2]);
+    }));
+  }
+
+  /* ----- השבוע ----- */
+
+  function weekView() {
+    var left = diffDays(S.today, S.weekId);
+    var when = left === 0 ? 'זה הערב!' : left === 1 ? 'מחר בערב' : 'בעוד ' + left + ' ימים';
+    var dec = decider();
+    var doneNow = S.history.filter(function (x) { return x.date === S.weekId; });
+    var hero = h('section', { class: 'hero' },
+      h('span', { class: 'moon', 'aria-hidden': 'true' }),
+      h('div', { class: 'hero-when' }, when),
+      h('div', { class: 'hero-date' }, longDate(S.weekId)),
+      dec && !doneNow.length
+        ? h('div', { class: 'hero-tie' }, 'אם יוצא תיקו, ההכרעה אצל ', h('span', { class: 'pic' }, dec.emoji), ' ' + dec.name)
+        : null);
+
+    if (doneNow.length) {
+      return h('main', null, hero,
+        h('section', { class: 'sec' },
+          h('div', { class: 'sec-head' }, h('h2', null, 'הערב של השבוע')),
+          h('div', { class: 'rows' }, doneNow.map(function (x) { return ticket(x, false); })),
+          h('p', { class: 'hint gap' }, 'ההצבעה לשבוע הבא נפתחת ביום שישי.'),
+          h('button', { class: 'btn btn-line btn-wide gap', onclick: function () { openDone([]); } }, icon('plus'), 'עשינו עוד משהו')));
+    }
+
+    return h('main', null, hero, notices(), voteSection(), votersSection(), resultsSection(),
+      h('section', { class: 'sec' },
+        h('button', { class: 'btn btn-line btn-wide', onclick: function () { openDone(winnerIds()); } }, icon('check'), 'עשינו! מסמנים את הערב')),
+      isDirty()
+        ? h('div', { class: 'savebar' }, h('button', { class: 'btn btn-main btn-wide', onclick: saveVotes }, icon('heart'), 'שמירת ההצבעה'))
+        : null);
+  }
+
+  function notices() {
+    var out = [];
+    if (REAL && !S.settings.hasCode) {
+      out.push(h('div', { class: 'notice' },
+        h('p', null, 'כרגע כל מי שמגיע לכתובת יכול להיכנס. כדאי לבחור קוד משפחתי.'),
+        h('button', { class: 'btn btn-main', onclick: openCode }, 'בחירת קוד')));
+    }
+    if (canInstall() && !flag('thursday_install_later')) {
+      out.push(h('div', { class: 'notice' },
+        h('p', null, 'האפליקציה יכולה לשבת על מסך הבית, כמו כל אפליקציה.'),
+        h('button', { class: 'btn btn-main', onclick: install }, icon('download'), 'התקנה'),
+        h('button', { class: 'x', 'aria-label': 'לא עכשיו', onclick: function () { flag('thursday_install_later', true); render(); } }, icon('close'))));
+    }
+    return out;
+  }
+
+  function voteSection() {
+    var ideas = liveIdeas();
+    var stats = doneStats();
+    var draft = currentDraft();
+    var max = S.settings.votesPerPerson;
+    var leftHearts = Math.max(0, max - draft.length);
+    var pips = [];
+    for (var k = 0; k < max; k++) pips.push(h('span', { class: k < leftHearts ? '' : 'used' }, icon('heart')));
+    var shown = ideas.filter(function (i) { return UI.filter === 'all' || i.place === UI.filter; });
+    shown = shown.filter(function (i) { return !isRecent(stats[i.id]); })
+      .concat(shown.filter(function (i) { return isRecent(stats[i.id]); }));
+    var body;
+    if (!ideas.length) {
+      body = h('div', { class: 'panel' },
+        h('p', null, 'עוד אין רעיונות ברשימה.'),
+        h('button', { class: 'btn btn-main gap', onclick: function () { openIdea(null); } }, icon('plus'), 'רעיון חדש'));
+    } else if (!shown.length) {
+      body = h('p', { class: 'hint' }, 'אין כרגע רעיונות מהסוג הזה.');
+    } else {
+      body = h('div', { class: 'grid' }, shown.map(function (i) { return tile(i, draft.indexOf(i.id) >= 0, stats[i.id]); }));
+    }
+    return h('section', { class: 'sec' },
+      h('div', { class: 'sec-head' },
+        h('h2', null, 'מה בא לך השבוע?'),
+        h('div', { class: 'pips', role: 'img', 'aria-label': 'נשארו ' + leftHearts + ' לבבות מתוך ' + max }, pips)),
+      placeChips(UI.filter, function (v) { UI.filter = v; render(); }),
+      body);
+  }
+
+  function tile(i, picked, stat) {
+    var where = i.place === 'out' ? 'בחוץ' : 'בבית';
+    return h('div', { class: 'tile ' + i.place + (picked ? ' picked' : '') + (UI.pop === i.id ? ' pop' : '') },
+      h('button', {
+        class: 'tile-main', 'aria-pressed': String(picked), 'aria-label': i.title + ', ' + where,
+        onclick: function () { toggleVote(i.id); }
+      },
+        h('span', { class: 'tile-art pic' }, picsOf(i).join('')),
+        h('span', { class: 'tile-title' }, i.title),
+        h('span', { class: 'tile-foot' }, h('span', { class: 'tile-place' }, where), h('span', { class: 'tile-heart' }, icon('heart')))),
+      CAN_SAY ? h('button', { class: 'tile-say', 'aria-label': 'להקריא: ' + i.title, onclick: function () { say(i.title); } }, icon('say')) : null,
+      isRecent(stat) ? h('span', { class: 'tile-recent' }, 'עשינו לא מזמן') : null);
+  }
+
+  function votersSection() {
+    var act = activeMembers();
+    if (act.length < 2) return null;
+    var voted = votedMap();
+    return h('section', { class: 'sec' },
+      h('div', { class: 'sec-head' }, h('h2', null, 'מי כבר הצביע')),
+      h('div', { class: 'voters' }, act.map(function (m) {
+        var done = !!voted[m.id];
+        return h('div', { class: 'voter' + (done ? ' done' : '') },
+          h('span', { class: 'voter-face pic', 'aria-hidden': 'true' }, m.emoji, done ? h('span', { class: 'voter-check' }, icon('check')) : null),
+          m.name,
+          h('span', { class: 'sr' }, done ? 'יש הצבעה' : 'עוד אין הצבעה'));
+      })));
+  }
+
+  function resultsSection() {
+    var act = activeMembers();
+    var voted = votedMap();
+    var count = act.filter(function (m) { return voted[m.id]; }).length;
+    var rank = ranking();
+    if (!count || !rank.length) return null;
+    if (!isRevealed()) {
+      return h('section', { class: 'sec' }, h('div', { class: 'panel' },
+        h('p', null, 'התוצאות נחשפות כשכולם מצביעים. עד עכשיו הצביעו ' + count + ' מתוך ' + act.length + '.'),
+        h('button', { class: 'btn-text', onclick: function () { call('reveal'); } }, 'לחשוף כבר עכשיו')));
+    }
+    var top = rank[0].voters.length;
+    var winners = rank.filter(function (r) { return r.voters.length === top; });
+    var dec = decider();
+    var verdict = winners.length === 1
+      ? h('div', { class: 'verdict' }, 'הבחירה של השבוע: ' + winners[0].idea.title)
+      : h('div', { class: 'verdict' }, 'יצא תיקו' + (dec ? '. ההכרעה אצל ' + dec.name : ''),
+          h('small', null, winners.map(function (r) { return r.idea.title; }).join(' או ')));
+    var bestHome = null, bestOut = null;
+    rank.forEach(function (r) {
+      if (r.idea.place === 'home' && !bestHome) bestHome = r.idea;
+      if (r.idea.place === 'out' && !bestOut) bestOut = r.idea;
+    });
+    return h('section', { class: 'sec' },
+      h('div', { class: 'sec-head' }, h('h2', null, 'התוצאות')),
+      verdict,
+      h('ol', { class: 'res' }, rank.map(function (r) {
+        return h('li', { class: r.voters.length === top ? 'win' : '' },
+          h('span', { class: 'res-pic pic' }, picsOf(r.idea).join('')),
+          h('div', { class: 'res-body' },
+            h('div', { class: 'res-title' }, r.idea.title),
+            h('div', { class: 'res-bar' }, h('i', { style: 'width:' + Math.round(100 * r.voters.length / top) + '%' })),
+            h('div', { class: 'res-who pic', role: 'img', 'aria-label': 'הצביעו: ' + r.voters.map(function (m) { return m.name; }).join(', ') },
+              r.voters.map(function (m) { return m.emoji; }).join(''))),
+          h('span', { class: 'res-n' }, r.voters.length));
+      })),
+      bestHome && bestOut
+        ? h('div', { class: 'mix' }, 'רעיון לערב משולב: ' + bestOut.title + ' בחוץ, ואחר כך ' + bestHome.title + ' בבית.')
+        : null);
+  }
+
+  /* ----- בנק הרעיונות ----- */
+
+  function bankView() {
+    var stats = doneStats();
+    var ideas = liveIdeas().filter(function (i) { return UI.bankFilter === 'all' || i.place === UI.bankFilter; });
+    return h('main', null,
+      h('div', { class: 'page-head' },
+        h('h2', null, 'בנק הרעיונות'),
+        h('button', { class: 'btn btn-main', onclick: function () { openIdea(null); } }, icon('plus'), 'רעיון חדש')),
+      placeChips(UI.bankFilter, function (v) { UI.bankFilter = v; render(); }),
+      ideas.length
+        ? h('div', { class: 'rows' }, ideas.slice().reverse().map(function (i) {
+            var st = stats[i.id];
+            var meta = TYPE_NAME[i.place] + ', ' + (st
+              ? (st.count === 1 ? 'עשינו פעם אחת' : 'עשינו ' + st.count + ' פעמים') + ', לאחרונה ב-' + shortDate(st.last)
+              : 'עוד לא עשינו');
+            return h('button', { class: 'row ' + i.place, 'aria-label': 'עריכה: ' + i.title, onclick: function () { openIdea(i); } },
+              h('span', { class: 'row-art pic' }, picsOf(i).join('')),
+              h('span', { class: 'row-body' },
+                h('span', { class: 'row-title' }, i.title),
+                i.note ? h('span', { class: 'row-note' }, i.note) : null,
+                h('span', { class: 'row-meta' }, meta)),
+              h('span', { class: 'row-edit' }, icon('edit')));
+          }))
+        : h('div', { class: 'panel' }, h('p', null, 'אין כאן רעיונות עדיין. כל אחד יכול להוסיף רעיון מתי שעולה לו.')));
+  }
+
+  /* ----- היסטוריה ----- */
+
+  function historyView() {
+    var list = S.history.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    if (!list.length) {
+      return h('main', null,
+        h('div', { class: 'page-head' }, h('h2', null, 'מה כבר עשינו')),
+        h('div', { class: 'panel' }, h('p', null, 'עוד אין כאן ערבים. אחרי הערב הראשון לוחצים על "עשינו" בלשונית השבוע, והוא נשמר כאן.')));
+    }
+    var counts = { home: 0, out: 0, combo: 0 };
+    list.forEach(function (x) { if (counts[x.type] !== undefined) counts[x.type]++; });
+    var top = hits();
+    return h('main', null,
+      h('div', { class: 'page-head' }, h('h2', null, 'מה כבר עשינו')),
+      h('p', { class: 'hint' }, (list.length === 1 ? 'ערב אחד' : list.length + ' ערבים') + ' עד היום. בבית: ' +
+        counts.home + ', בחוץ: ' + counts.out + ', משולב: ' + counts.combo + '.'),
+      top.length ? h('section', { class: 'sec' }, h('div', { class: 'panel' },
+        h('h3', null, 'הלהיטים שלנו'),
+        h('ol', { class: 'hits' }, top.map(function (r, n) {
+          return h('li', null,
+            h('span', { class: 'hits-n' }, n + 1),
+            h('span', { class: 'pic' }, picsOf(r.idea).join('')),
+            h('span', { class: 'hits-t' }, r.idea.title),
+            h('span', { class: 'hits-s' }, 'ממוצע ' + fmt1(r.avg)));
+        })))) : null,
+      h('section', { class: 'sec' }, h('div', { class: 'rows' }, list.map(function (x) { return ticket(x, true); }))));
+  }
+
+  function ticket(x, canDelete) {
+    var d = toDate(x.date);
+    var pics = [];
+    x.ideaIds.forEach(function (id) { pics = pics.concat(picsOf(idea(id))); });
+    var mine = x.ratings[UI.me] || 0;
+    var vals = Object.keys(x.ratings).filter(member).map(function (k) { return Number(x.ratings[k]); });
+    var stars = [];
+    for (var s = 1; s <= 5; s++) stars.push(starButton(x, s, mine));
+    var year = d.getUTCFullYear() !== toDate(S.today).getUTCFullYear() ? ' ' + d.getUTCFullYear() : '';
+    return h('article', { class: 'ticket ' + x.type },
+      h('div', { class: 'ticket-date' },
+        h('span', { class: 'ticket-day' }, d.getUTCDate()),
+        h('span', { class: 'ticket-mon' }, MONTHS[d.getUTCMonth()] + year)),
+      h('div', { class: 'ticket-body' },
+        h('div', { class: 'ticket-top' },
+          h('span', { class: 'ticket-pics pic' }, pics.join('')),
+          h('span', { class: 'tag ' + x.type }, TYPE_NAME[x.type] || '')),
+        h('div', { class: 'ticket-title' }, x.titles),
+        x.note ? h('div', { class: 'ticket-note' }, x.note) : null,
+        h('div', { class: 'ticket-foot' },
+          h('div', { class: 'stars', role: 'group', 'aria-label': 'הדירוג שלי' }, stars),
+          h('span', { class: 'avg' }, vals.length ? 'ממוצע ' + fmt1(mean(vals)) + ' מתוך ' + vals.length : 'עוד לא דירגו')),
+        canDelete ? h('button', { class: 'btn-text', onclick: function () { askDelete(x); } }, 'מחיקה') : null));
+  }
+  function starButton(x, s, mine) {
+    return h('button', {
+      class: s <= mine ? 'on' : '', 'aria-label': s + ' כוכבים', 'aria-pressed': String(s <= mine),
+      onclick: function () { rate(x, s); }
+    }, icon('star'));
+  }
+
+  /* ----- משפחה ----- */
+
+  function familyView() {
+    var n = S.settings.votesPerPerson;
+    return h('main', null,
+      h('div', { class: 'page-head' },
+        h('h2', null, 'המשפחה'),
+        h('button', { class: 'btn btn-main', onclick: function () { openMember(null); } }, icon('plus'), 'הוספה')),
+      h('div', { class: 'rows' }, S.members.map(function (m) {
+        var link = REAL
+          ? 'https://wa.me/?text=' + encodeURIComponent(m.name + ', זה הקישור שלך לחמישי משפחתי: ' +
+              window.location.origin + window.location.pathname + '?m=' + m.id + (UI.code ? '&k=' + encodeURIComponent(UI.code) : ''))
+          : '';
+        return h('div', { class: 'row person' + (m.active ? '' : ' off') },
+          h('span', { class: 'row-art pic' }, m.emoji),
+          h('div', { class: 'row-body' },
+            h('div', { class: 'row-title' }, m.name + (m.id === UI.me ? ' (אני)' : '')),
+            m.active ? null : h('div', { class: 'row-meta' }, 'לא בהצבעות כרגע'),
+            link ? h('div', { class: 'row-meta' }, h('a', { href: link, target: '_blank', rel: 'noopener' }, 'שליחת קישור אישי בוואטסאפ')) : null),
+          h('button', { class: 'row-edit', 'aria-label': 'עריכה: ' + m.name, onclick: function () { openMember(m); } }, icon('edit')));
+      })),
+      REAL ? h('p', { class: 'hint gap' }, 'קישור אישי פותח את האפליקציה ישר על מי שקיבל אותו, בלי להקליד קוד. נוח במיוחד לקטנים.') : null,
+      canInstall() ? h('section', { class: 'sec' },
+        h('div', { class: 'panel setting' },
+          h('div', null, 'האפליקציה על מסך הבית'),
+          h('button', { class: 'btn btn-main', onclick: install }, icon('download'), 'התקנה'))) : null,
+      REAL ? h('section', { class: 'sec' },
+        h('div', { class: 'panel setting' },
+          h('div', null, 'קוד משפחתי', h('div', { class: 'hint' }, S.settings.hasCode ? 'נבחר. בלי הקוד אי אפשר להיכנס.' : 'עוד לא נבחר. הכניסה פתוחה לכל מי שיש לו את הכתובת.')),
+          h('button', { class: 'btn btn-line', onclick: openCode }, S.settings.hasCode ? 'החלפה' : 'בחירה'))) : null,
+      h('section', { class: 'sec' },
+        h('div', { class: 'panel setting' },
+          h('div', null, 'לבבות לכל אחד בשבוע'),
+          h('div', { class: 'stepper' },
+            h('button', { 'aria-label': 'פחות לבבות', disabled: n <= 1, onclick: function () { call('setVotesPerPerson', { value: n - 1 }); } }, '-'),
+            h('span', null, n),
+            h('button', { 'aria-label': 'יותר לבבות', disabled: n >= 5, onclick: function () { call('setVotesPerPerson', { value: n + 1 }); } }, '+')))),
+      h('section', { class: 'sec' },
+        h('button', { class: 'btn btn-line btn-wide', onclick: function () { UI.askWho = true; render(); } }, 'החלפת מי שמצביע מהטלפון הזה')));
+  }
+
+  /* ----- חלוניות ----- */
+
+  function sheet(title, body) {
+    var fresh = UI.modal.fresh;
+    UI.modal.fresh = false;
+    return h('div', { class: 'veil', onclick: function (e) { if (e.target === e.currentTarget) closeModal(); } },
+      h('div', { class: 'sheet' + (fresh ? ' in' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
+        h('div', { class: 'sheet-head' },
+          h('h2', null, title),
+          h('button', { class: 'x', 'aria-label': 'סגירה', onclick: closeModal }, icon('close'))),
+        body));
+  }
+
+  function emojiGrid(list, selected, onPick, label) {
+    return h('div', { class: 'emojis', role: 'group', 'aria-label': label }, list.map(function (e) {
+      return h('button', { type: 'button', class: 'pic', 'aria-pressed': String(selected.indexOf(e) >= 0), onclick: function () { onPick(e); } }, e);
+    }));
+  }
+
+  function placeSeg(current, onPick) {
+    return h('div', { class: 'seg' }, [['home', '🏠', 'בבית'], ['out', '🌳', 'בחוץ']].map(function (o) {
+      return h('button', { type: 'button', class: o[0], 'aria-pressed': String(current === o[0]), onclick: function () { onPick(o[0]); } },
+        h('span', { class: 'pic' }, o[1]), o[2]);
+    }));
+  }
+
+  function modalView() {
+    var m = UI.modal;
+    if (m.type === 'idea') return ideaModal(m);
+    if (m.type === 'member') return memberModal(m);
+    if (m.type === 'done') return doneModal(m);
+    if (m.type === 'code') return codeModal(m);
+    if (m.type === 'install') return installModal();
+    return sheet(m.title, [
+      h('p', null, m.text),
+      h('div', { class: 'sheet-actions gap' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: m.run }, m.yes),
+        h('button', { class: 'btn-text', onclick: closeModal }, 'ביטול'))
+    ]);
+  }
+
+  function codeModal(m) {
+    return sheet(S.settings.hasCode ? 'החלפת הקוד המשפחתי' : 'בחירת קוד משפחתי', [
+      h('p', { class: 'field' }, 'מי שנכנס לאפליקציה מקליד את הקוד פעם אחת במכשיר שלו. קישור אישי כבר כולל את הקוד.'),
+      h('label', { class: 'field' }, h('span', null, 'הקוד החדש: 4 תווים לפחות, אותיות וספרות'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '30', autocomplete: 'off', autocapitalize: 'off', value: m.value, 'data-focus': '1',
+          oninput: function (e) { m.value = e.target.value; },
+          onkeydown: function (e) { if (e.key === 'Enter') saveFamilyCode(); }
+        })),
+      S.settings.hasCode ? h('p', { class: 'field' }, 'אחרי ההחלפה שאר המכשירים יתבקשו להקליד את הקוד החדש, וכדאי לשלוח מחדש את הקישורים האישיים.') : null,
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: saveFamilyCode }, icon('lock'), 'שמירת הקוד'))
+    ]);
+  }
+
+  function installModal() {
+    var steps = isIOS
+      ? ['לוחצים על כפתור השיתוף של הדפדפן: ריבוע עם חץ למעלה.', 'גוללים ובוחרים "הוספה למסך הבית".', 'מאשרים בלחיצה על "הוספה".']
+      : ['פותחים את תפריט הדפדפן: שלוש הנקודות.', 'בוחרים "התקנת האפליקציה" או "הוספה למסך הבית".', 'מאשרים.'];
+    return sheet('האפליקציה על מסך הבית', [
+      h('ol', { class: 'steps' }, steps.map(function (text, n) { return h('li', null, h('b', null, n + 1), h('span', null, text)); })),
+      isIOS ? h('p', { class: 'field' }, 'בפתיחה הראשונה מהמסך הבית האפליקציה מבקשת שוב את הקוד ואת השם, פעם אחת.') : null,
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: closeModal }, 'הבנתי'))
+    ]);
+  }
+
+  function ideaModal(m) {
+    var preview = h('span', { class: 'picbig pic ' + m.place }, shownPics(m).join(''));
+    return sheet(m.id ? 'עריכת רעיון' : 'רעיון חדש', [
+      h('label', { class: 'field' }, h('span', null, 'מה עושים?'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '60', value: m.title, placeholder: 'למשל: ערב פנקייקים', 'data-focus': m.id ? null : '1',
+          oninput: function (e) {
+            m.title = e.target.value;
+            if (!m.manual) { m.pics = autoPic(m.title); preview.textContent = shownPics(m).join(''); }
+          }
+        })),
+      h('div', { class: 'picrow' }, preview,
+        h('div', null,
+          h('span', { class: 'pic-hint' }, m.manual ? 'תמונה שבחרתם' : 'התמונה נבחרת לבד לפי מה שכותבים'),
+          h('button', { type: 'button', class: 'btn-text', onclick: function () { m.picker = !m.picker; render(); } },
+            m.picker ? 'סגירת הבחירה' : 'בחירת תמונה אחרת'))),
+      m.picker ? [
+        emojiGrid(IDEA_EMOJIS, m.pics, function (e) {
+          var at = m.pics.indexOf(e);
+          if (at >= 0) m.pics.splice(at, 1);
+          else { if (m.pics.length >= 2) m.pics.shift(); m.pics.push(e); }
+          m.manual = true;
+          render();
+        }, 'בחירת תמונה, עד שתיים'),
+        m.manual ? h('button', { type: 'button', class: 'btn-text', onclick: function () { m.manual = false; m.pics = autoPic(m.title); render(); } }, 'חזרה לבחירה אוטומטית') : null
+      ] : null,
+      h('div', { class: 'field' }, h('span', null, 'איפה?'),
+        placeSeg(m.place, function (v) { m.place = v; render(); })),
+      h('label', { class: 'field' }, h('span', null, 'הערה, לא חובה'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '140', value: m.note, placeholder: 'למשל: צריך להזמין מקום',
+          oninput: function (e) { m.note = e.target.value; }
+        })),
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: saveIdea }, 'שמירת הרעיון'),
+        m.id ? h('button', { class: 'btn-text danger', onclick: removeIdea }, 'הסרה מהרשימה') : null)
+    ]);
+  }
+
+  function memberModal(m) {
+    return sheet(m.id ? 'עריכת בן או בת משפחה' : 'בן או בת משפחה חדשים', [
+      h('label', { class: 'field' }, h('span', null, 'שם'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '30', value: m.name, 'data-focus': m.id ? null : '1',
+          oninput: function (e) { m.name = e.target.value; }
+        })),
+      h('div', { class: 'field' }, h('span', null, 'דמות'),
+        emojiGrid(MEMBER_EMOJIS, [m.emoji], function (e) { m.emoji = e; render(); }, 'בחירת דמות')),
+      m.id ? h('label', { class: 'check' },
+        h('input', { type: 'checkbox', checked: m.active, onchange: function (e) { m.active = e.target.checked; } }),
+        'להשתתף בהצבעות') : null,
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: saveMember }, 'שמירה'))
+    ]);
+  }
+
+  function doneModal(m) {
+    var rankIds = isRevealed() ? ranking().map(function (r) { return r.idea.id; }) : [];
+    var ideas = liveIdeas().slice().sort(function (a, b) {
+      var ra = rankIds.indexOf(a.id), rb = rankIds.indexOf(b.id);
+      return (ra < 0 ? 999 : ra) - (rb < 0 ? 999 : rb);
+    });
+    return sheet('מה עשינו?', [
+      h('label', { class: 'field' }, h('span', null, 'מתי'),
+        h('input', {
+          class: 'input', type: 'date', value: m.date, max: S.today,
+          onchange: function (e) { if (e.target.value) m.date = e.target.value; }
+        })),
+      h('div', { class: 'field' }, h('span', null, 'בוחרים אחד, או שניים לערב משולב'),
+        h('div', { class: 'picks' }, ideas.map(function (i) {
+          var on = m.ideaIds.indexOf(i.id) >= 0;
+          return h('button', {
+            type: 'button', class: 'pick ' + i.place, 'aria-pressed': String(on),
+            onclick: function () {
+              var at = m.ideaIds.indexOf(i.id);
+              if (at >= 0) m.ideaIds.splice(at, 1);
+              else { if (m.ideaIds.length >= 2) m.ideaIds.shift(); m.ideaIds.push(i.id); }
+              render();
+            }
+          }, h('span', { class: 'pic' }, picsOf(i).join('')), i.title);
+        })),
+        m.otherOpen
+          ? [
+              h('input', {
+                class: 'input', type: 'text', maxlength: '60', value: m.otherTitle, placeholder: 'מה עשיתם?', 'aria-label': 'משהו אחר שעשינו',
+                oninput: function (e) { m.otherTitle = e.target.value; }
+              }),
+              h('div', { class: 'gap' }, placeSeg(m.otherPlace, function (v) { m.otherPlace = v; render(); }))
+            ]
+          : h('button', { type: 'button', class: 'btn-text', onclick: function () { m.otherOpen = true; render(); } }, 'עשינו משהו שלא ברשימה')),
+      h('label', { class: 'field' }, h('span', null, 'משהו לזכור מהערב, לא חובה'),
+        h('input', {
+          class: 'input', type: 'text', maxlength: '200', value: m.note, placeholder: 'למשל: אבא ניצח בבאולינג',
+          oninput: function (e) { m.note = e.target.value; }
+        })),
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn btn-main btn-wide', onclick: saveDone }, icon('check'), 'שמירה בהיסטוריה'))
+    ]);
+  }
+
+  /* ================= תצוגת הדגמה (בלי גיליון) ================= */
+
+  var D = null;
+  function demoToday() {
+    var n = new Date();
+    return ymd(new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())));
+  }
+  function demoInit() {
+    var week = nextThursday(demoToday());
+    var seeds = [
+      ['ערב סרט עם פופקורן', '🎬 🍿', 'home'], ['משחקי קופסה', '🎲 🧩', 'home'], ['מכינים פיצה ביחד', '🍕 🍳', 'home'],
+      ['קריוקי בסלון', '🎤 🎶', 'home'], ["אוהל בסלון ומסיבת פיג'מות", '⛺ 🛌', 'home'], ['גלידה וטיול ערב', '🍦 🚶', 'out'],
+      ['באולינג', '🎳', 'out'], ['פיקניק שקיעה בפארק', '🧺 🌅', 'out'], ['מסעדה שכולם בוחרים יחד', '🍽️', 'out'],
+      ['גן שעשועים בחושך עם פנסים', '🎠 🔦', 'out']
+    ];
+    D = {
+      seq: 100,
+      members: [
+        { id: 'm1', name: 'אבא', emoji: '🦁', active: true }, { id: 'm2', name: 'אמא', emoji: '🦊', active: true },
+        { id: 'm3', name: 'נועה', emoji: '🦄', active: true }, { id: 'm4', name: 'מיקה', emoji: '🐼', active: true }
+      ],
+      ideas: seeds.map(function (s, n) { return { id: 'd' + (n + 1), title: s[0], pic: s[1], place: s[2], note: '', addedBy: '', archived: false }; }),
+      votes: [
+        { memberId: 'm2', ideaId: 'd6' }, { memberId: 'm2', ideaId: 'd1' },
+        { memberId: 'm3', ideaId: 'd6' }, { memberId: 'm3', ideaId: 'd5' }
+      ],
+      history: [
+        { id: 'h1', date: addDays(week, -7), ideaIds: ['d7'], titles: 'באולינג', type: 'out', note: 'נועה עשתה סטרייק', ratings: { m1: 4, m2: 5, m3: 5 } },
+        { id: 'h2', date: addDays(week, -14), ideaIds: ['d6', 'd1'], titles: 'גלידה וטיול ערב + ערב סרט עם פופקורן', type: 'combo', note: '', ratings: { m1: 5, m3: 4, m4: 5 } },
+        { id: 'h3', date: addDays(week, -21), ideaIds: ['d2'], titles: 'משחקי קופסה', type: 'home', note: '', ratings: { m2: 3 } }
+      ],
+      settings: { votesPerPerson: 3, revealedWeek: '', hasCode: true }
+    };
+  }
+  function demoApi(action, p) {
+    if (!D) demoInit();
+    var today = demoToday();
+    var weekId = nextThursday(today);
+    var created = null;
+    function byId(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+    if (action === 'addMember') {
+      created = 'm' + (++D.seq);
+      D.members.push({ id: created, name: p.name, emoji: p.emoji || '🙂', active: true });
+    } else if (action === 'updateMember') {
+      var mm = byId(D.members, p.id);
+      if (p.name !== undefined) mm.name = p.name;
+      if (p.emoji !== undefined) mm.emoji = p.emoji;
+      if (p.active !== undefined) mm.active = !!p.active;
+    } else if (action === 'addIdea') {
+      created = 'd' + (++D.seq);
+      D.ideas.push({ id: created, title: p.title, pic: p.pic || placePic(p.place), place: p.place === 'out' ? 'out' : 'home', note: p.note || '', addedBy: p.addedBy || '', archived: false });
+    } else if (action === 'updateIdea') {
+      var ii = byId(D.ideas, p.id);
+      ['title', 'pic', 'note'].forEach(function (k) { if (p[k] !== undefined) ii[k] = p[k]; });
+      if (p.place !== undefined) ii.place = p.place === 'out' ? 'out' : 'home';
+      if (p.archived !== undefined) ii.archived = !!p.archived;
+    } else if (action === 'setVotes') {
+      D.votes = D.votes.filter(function (v) { return v.memberId !== p.memberId; });
+      (p.ideaIds || []).forEach(function (id) { D.votes.push({ memberId: p.memberId, ideaId: id }); });
+    } else if (action === 'reveal') {
+      D.settings.revealedWeek = weekId;
+    } else if (action === 'markDone') {
+      var chosen = (p.ideaIds || []).map(function (id) { return byId(D.ideas, id); }).filter(Boolean);
+      var places = chosen.map(function (i) { return i.place; });
+      created = 'h' + (++D.seq);
+      D.history.push({
+        id: created, date: p.date, ideaIds: chosen.map(function (i) { return i.id; }),
+        titles: chosen.map(function (i) { return i.title; }).join(' + '),
+        type: places.indexOf('home') >= 0 && places.indexOf('out') >= 0 ? 'combo' : places[0],
+        note: p.note || '', ratings: {}
+      });
+    } else if (action === 'rate') {
+      var hh = byId(D.history, p.historyId);
+      if (p.stars) hh.ratings[p.memberId] = p.stars; else delete hh.ratings[p.memberId];
+    } else if (action === 'deleteHistory') {
+      D.history = D.history.filter(function (x) { return x.id !== p.id; });
+    } else if (action === 'setVotesPerPerson') {
+      D.settings.votesPerPerson = p.value;
+    }
+    return JSON.parse(JSON.stringify({
+      created: created,
+      state: { today: today, weekId: weekId, members: D.members, ideas: D.ideas, votes: D.votes, history: D.history, settings: D.settings, appUrl: '' }
+    }));
+  }
+
+  /* ================= הפעלה ================= */
+
+  function afterLoad() {
+    if (UI.needCode) { render(); return; }
+    if (!S) { UI.bootFailed = true; render(); return; }
+    if (UI.code) saveCode(UI.code);
+    var fromLink = param('m');
+    var id = fromLink && member(fromLink) ? fromLink : loadMe();
+    if (id && member(id)) { UI.me = id; saveMe(id); }
+    if (!S.members.length) UI.setup = true;
+    render();
+  }
+
+  function boot() {
+    UI.bootFailed = false;
+    // קישור אישי: ?m=מזהה&k=קוד. אחרי הקריאה מנקים את הכתובת, כדי שהקוד לא יישאר בשורת הכתובת.
+    UI.code = param('k') || loadCode();
+    if (param('k') || param('m')) {
+      try { window.history.replaceState(null, '', window.location.pathname + (param('demo') === '1' ? '?demo=1' : '')); } catch (e) { /* לא קריטי */ }
+    }
+    render();
+    call('getState').then(afterLoad);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && UI.modal) closeModal();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && S && !UI.busy && Date.now() - UI.loadedAt > 20000) call('getState');
+  });
+
+  // עובד שירות: מאפשר התקנה ופתיחה של המעטפת גם בלי רשת. רץ רק מאתר אמיתי, לא מקובץ מקומי.
+  if ('serviceWorker' in NAV && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+    window.addEventListener('load', function () {
+      NAV.serviceWorker.register('sw.js').catch(function () { /* האפליקציה עובדת גם בלי זה */ });
+    });
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
