@@ -1,0 +1,128 @@
+[
+  {
+    "id": "starter-ideas",
+    "note": "רשימת הפתיחה. רעיון שכבר קיים בגיליון לפי השם לא מתווסף שוב.",
+    "changes": [
+      {
+        "do": "addIdea",
+        "title": "ערב סרט עם פופקורן",
+        "pic": "🎬 🍿",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "משחקי קופסה",
+        "pic": "🎲 🧩",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "מכינים פיצה ביחד",
+        "pic": "🍕 🍳",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "ערב קריוקי",
+        "pic": "🎤 🎶",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "אוהל בסלון ומסיבת פיג'מות",
+        "pic": "⛺ 🛌",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "גלידה וטיול ערב",
+        "pic": "🍦 🚶",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "באולינג",
+        "pic": "🎳",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "פיקניק שקיעה בפארק",
+        "pic": "🧺 🌅",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "מסעדה שכולם בוחרים יחד",
+        "pic": "🍽️",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "גן שעשועים בחושך עם פנסים",
+        "pic": "🎠 🔦",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "מאסטר שף",
+        "pic": "🍳 🏆",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "חדר בריחה ביתי",
+        "pic": "🔐 🏠",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "מבחן טעימות עיוור",
+        "pic": "🙈 😋",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "ספא ביתי",
+        "pic": "🧖 💅",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "פיקניק גינה",
+        "pic": "🧺 🌼",
+        "place": "home"
+      },
+      {
+        "do": "addIdea",
+        "title": "חדר בריחה אמיתי - הפיצה",
+        "pic": "🔐 🍕",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "טניס",
+        "pic": "🎾",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "קולנוע",
+        "pic": "🎟️ 🎬",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "טיול במדרחוב זכרון יעקוב",
+        "pic": "🚶 🏘️",
+        "place": "out"
+      },
+      {
+        "do": "addIdea",
+        "title": "טיול בנמל קיסריה",
+        "pic": "⛵ 🏛️",
+        "place": "out"
+      }
+    ]
+  }
+]

@@ -1,7 +1,7 @@
 // עובד השירות של חמישי משפחתי.
 // רשת קודם: כל עדכון שעולה ל-GitHub נראה מיד. אם אין רשת, המעטפת נפתחת מהעותק השמור.
 // הנתונים עצמם (הקריאות לגיליון) לא עוברים דרך כאן ולא נשמרים במכשיר.
-const CACHE = 'thursday-shell-v1';
+const CACHE = 'thursday-shell-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
@@ -20,7 +20,8 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
   event.respondWith(
-    fetch(request)
+    // no-cache: תמיד בודקים מול GitHub אם יש גרסה חדשה, ולא מסתפקים בעותק של הדפדפן
+    fetch(request.url, { cache: 'no-cache' })
       .then((response) => {
         if (response.ok) {
           const copy = response.clone();

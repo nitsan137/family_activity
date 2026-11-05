@@ -275,12 +275,16 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
 
   /* ================= בסיס ================= */
 
-  // הכתובת של צד הגיליון (Google Apps Script). כל הנתונים נשמרים בגיליון של המשפחה.
-  var API_URL = 'https://script.google.com/macros/s/AKfycby5iU-zOV9UBh1NP5te_TEH7y5Q_ApMBBdq3lk1k0W8HErk3FIRmxJs4vyb_snjrqBi6w/exec';
+  // הדלת של הגיליון (Google Apps Script). כל הנתונים נשמרים בגיליון של המשפחה.
+  // אם הכתובת הראשונה לא עונה כמו דלת, מנסים את השנייה.
+  var API_URLS = [
+    'https://script.google.com/macros/s/AKfycbzgRypxjI5elrLrGLBUabVv9TuxU_ji41-jSzQmFyNMoE3Sv4UH2ytkNKMLIW9VJUdMMw/exec',
+    'https://script.google.com/macros/s/AKfycby5iU-zOV9UBh1NP5te_TEH7y5Q_ApMBBdq3lk1k0W8HErk3FIRmxJs4vyb_snjrqBi6w/exec'
+  ];
   var QUERY = (function () { try { return new URLSearchParams(window.location.search); } catch (e) { return null; } })();
   function param(name) { return QUERY ? (QUERY.get(name) || '') : ''; }
   // ?demo=1 פותח תצוגת הדגמה עם נתונים לדוגמה, בלי לגעת בגיליון
-  var REAL = !!API_URL && param('demo') !== '1';
+  var REAL = param('demo') !== '1';
   var S = null; // המצב שהגיע מהגיליון
   var UI = {
     tab: 'week', me: '', filter: 'all', bankFilter: 'all', draft: null, busy: 0,
@@ -548,31 +552,329 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
     } catch (e) { /* אין הקראה במכשיר הזה */ }
   }
 
-  /* ================= תקשורת עם הגיליון ================= */
+  /* ================= הגיליון: מבנה, דלת ומצב ================= */
+
+  // הלשוניות והעמודות שהאפליקציה צריכה. מה שחסר בגיליון נוצר לבד, כך ששינוי כאן לא דורש לגעת ב-Apps Script.
+  var SCHEMA = {
+    members:  { tab: 'משפחה',   cols: ['id', 'name', 'emoji', 'active', 'createdAt'] },
+    ideas:    { tab: 'רעיונות',  cols: ['id', 'title', 'pic', 'place', 'note', 'addedBy', 'createdAt', 'archived'] },
+    votes:    { tab: 'הצבעות',   cols: ['weekId', 'memberId', 'ideaId', 'createdAt'] },
+    history:  { tab: 'היסטוריה', cols: ['id', 'date', 'ideaIds', 'titles', 'type', 'note', 'createdBy', 'createdAt'] },
+    ratings:  { tab: 'דירוגים',  cols: ['historyId', 'memberId', 'stars', 'createdAt'] },
+    settings: { tab: 'הגדרות',   cols: ['key', 'value'] }
+  };
+  var TZ = 'Asia/Jerusalem';
+  var T = null;    // השורות כפי שהן בגיליון
+  var NOW = '';    // השעה לפי השרת, כדי לא להיות תלויים בשעון של הטלפון
+  var apiUrl = ''; // הכתובת שענתה בפועל
+
+  function postJson(url, body) {
+    // הגוף נשלח כטקסט פשוט, כדי שהדפדפן לא ישלח לפני כן בקשת הכנה ש-Apps Script לא עונה עליה
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, redirect: 'follow' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || typeof data.ok !== 'boolean') throw new Error('unexpected answer');
+        return data;
+      });
+  }
+
+  // שולח פעולות על שורות לדלת של הגיליון, ומעדכן את המצב לפי כל הלשוניות שחוזרות ממנה
+  function door(ops, unless) {
+    var req = { code: UI.code, schema: SCHEMA, ops: ops || [], unless: unless || null };
+    var answer;
+    if (!REAL) {
+      answer = new Promise(function (resolve) { setTimeout(function () { resolve(demoDoor(req)); }, 150); });
+    } else {
+      var body = JSON.stringify(req);
+      var urls = apiUrl ? [apiUrl] : API_URLS.slice();
+      var attempt = function (i) {
+        return postJson(urls[i], body).then(function (data) { apiUrl = urls[i]; return data; }, function (err) {
+          if (i + 1 < urls.length) return attempt(i + 1);
+          throw err;
+        });
+      };
+      answer = attempt(0);
+    }
+    return answer.then(function (data) {
+      if (!data.ok) {
+        var err = new Error(data.error || '');
+        err.reason = data.reason || '';
+        throw err;
+      }
+      T = data.tables;
+      NOW = data.now;
+      S = derive(data.hasCode);
+      UI.loadedAt = Date.now();
+      return data;
+    });
+  }
+
+  function rowsOf(name) { return (T && T[name]) || []; }
+  function rowById(name, id) { var hit = null; rowsOf(name).forEach(function (r) { if (r.id === id) hit = r; }); return hit; }
+  function settingOf(key) { var v = ''; rowsOf('settings').forEach(function (r) { if (r.key === key) v = r.value; }); return v; }
+  function yes(v) { var t = String(v).toLowerCase(); return t === '1' || t === 'true'; }
+  function parseJson(text) {
+    try {
+      var o = JSON.parse(text || '{}');
+      return o && typeof o === 'object' && !Array.isArray(o) ? o : {};
+    } catch (e) { return {}; }
+  }
+  function dayIn(iso) {
+    try {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(iso));
+    } catch (e) { return String(iso).slice(0, 10); }
+  }
+
+  // בונה מהשורות הגולמיות את המצב שהמסכים מציגים
+  function derive(hasCode) {
+    var today = dayIn(NOW);
+    var weekId = nextThursday(today); // יום חמישי הקרוב, כולל היום. זה המזהה של סבב ההצבעה.
+    var stars = {};
+    rowsOf('ratings').forEach(function (r) {
+      (stars[r.historyId] || (stars[r.historyId] = {}))[r.memberId] = Number(r.stars) || 0;
+    });
+    var perPerson = Math.round(Number(settingOf('votesPerPerson')));
+    return {
+      today: today,
+      weekId: weekId,
+      members: rowsOf('members').map(function (m) { return { id: m.id, name: m.name, emoji: m.emoji, active: yes(m.active) }; }),
+      ideas: rowsOf('ideas').map(function (i) {
+        return { id: i.id, title: i.title, pic: i.pic, place: i.place === 'out' ? 'out' : 'home', note: i.note || '', addedBy: i.addedBy || '', archived: yes(i.archived) };
+      }),
+      votes: rowsOf('votes').filter(function (v) { return v.weekId === weekId; })
+        .map(function (v) { return { memberId: v.memberId, ideaId: v.ideaId }; }),
+      history: rowsOf('history').map(function (x) {
+        // דירוגים מהגרסה הראשונה נשמרו בתוך שורת ההיסטוריה. הלשונית של הדירוגים גוברת עליהם.
+        var ratings = parseJson(x.ratings);
+        var newer = stars[x.id] || {};
+        Object.keys(newer).forEach(function (k) { ratings[k] = newer[k]; });
+        Object.keys(ratings).forEach(function (k) { if (!(Number(ratings[k]) > 0)) delete ratings[k]; });
+        return { id: x.id, date: x.date, ideaIds: x.ideaIds ? x.ideaIds.split(',') : [], titles: x.titles, type: x.type, note: x.note || '', ratings: ratings };
+      }),
+      settings: {
+        votesPerPerson: perPerson >= 1 && perPerson <= 5 ? perPerson : 3,
+        revealedWeek: settingOf('revealedWeek'),
+        hasCode: !!hasCode
+      }
+    };
+  }
+
+  /* ================= הפעולות של האפליקציה ================= */
+
+  function clean(value, max) {
+    var text = String(value === undefined || value === null ? '' : value).replace(/[\r\n\t]+/g, ' ').trim().replace(/^[=+]+/, '').trim();
+    return Array.from(text).slice(0, max).join('');
+  }
+  function newId(prefix) {
+    var bytes = new Uint8Array(4);
+    window.crypto.getRandomValues(bytes);
+    return prefix + '_' + Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+  function stamp() { return new Date().toISOString().slice(0, 19); }
+  function fail(text) { throw new Error(text); }
+  function setting(key, value) {
+    return { op: 'upsert', table: 'settings', match: { key: key }, row: { key: key, value: String(value) } };
+  }
+
+  // כל פעולה מתורגמת כאן לפעולות על שורות בגיליון. הבדיקות נעשות כאן, והדלת רק כותבת.
+  var ACTIONS = {
+    getState: function () { return { ops: [] }; },
+
+    addMember: function (p) {
+      var name = clean(p.name, 30);
+      if (!name) fail('חסר שם');
+      var id = newId('m');
+      return { created: id, ops: [{ op: 'append', table: 'members', row: { id: id, name: name, emoji: clean(p.emoji, 8) || '🙂', active: '1', createdAt: stamp() } }] };
+    },
+
+    updateMember: function (p) {
+      if (!rowById('members', p.id)) fail('הרשומה לא נמצאה');
+      var set = {};
+      if (p.name !== undefined) { set.name = clean(p.name, 30); if (!set.name) fail('חסר שם'); }
+      if (p.emoji !== undefined && clean(p.emoji, 8)) set.emoji = clean(p.emoji, 8);
+      if (p.active !== undefined) set.active = p.active ? '1' : '';
+      return { ops: [{ op: 'update', table: 'members', match: { id: p.id }, set: set }] };
+    },
+
+    addIdea: function (p) {
+      var title = clean(p.title, 60);
+      if (!title) fail('חסר שם לרעיון');
+      var place = p.place === 'out' ? 'out' : 'home';
+      var id = newId('i');
+      return { created: id, ops: [{ op: 'append', table: 'ideas', row: {
+        id: id, title: title, pic: clean(p.pic, 12) || placePic(place), place: place,
+        note: clean(p.note, 140), addedBy: clean(p.addedBy, 20), createdAt: stamp(), archived: ''
+      } }] };
+    },
+
+    updateIdea: function (p) {
+      if (!rowById('ideas', p.id)) fail('הרשומה לא נמצאה');
+      var set = {};
+      if (p.title !== undefined) { set.title = clean(p.title, 60); if (!set.title) fail('חסר שם לרעיון'); }
+      if (p.place !== undefined) set.place = p.place === 'out' ? 'out' : 'home';
+      if (p.pic !== undefined && clean(p.pic, 12)) set.pic = clean(p.pic, 12);
+      if (p.note !== undefined) set.note = clean(p.note, 140);
+      if (p.archived !== undefined) set.archived = p.archived ? '1' : '';
+      return { ops: [{ op: 'update', table: 'ideas', match: { id: p.id }, set: set }] };
+    },
+
+    setVotes: function (p) {
+      if (!rowById('members', p.memberId)) fail('לא מצאנו את מי שמצביע');
+      var ids = [];
+      (p.ideaIds || []).forEach(function (id) {
+        var row = rowById('ideas', id);
+        if (row && !yes(row.archived) && ids.indexOf(id) < 0) ids.push(id);
+      });
+      if (ids.length > S.settings.votesPerPerson) fail('אפשר לבחור עד ' + S.settings.votesPerPerson + ' רעיונות');
+      var ops = [{ op: 'remove', table: 'votes', match: { weekId: S.weekId, memberId: p.memberId } }];
+      ids.forEach(function (id) {
+        ops.push({ op: 'append', table: 'votes', row: { weekId: S.weekId, memberId: p.memberId, ideaId: id, createdAt: stamp() } });
+      });
+      return { ops: ops };
+    },
+
+    reveal: function () { return { ops: [setting('revealedWeek', S.weekId)] }; },
+
+    markDone: function (p) {
+      var date = String(p.date || '');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) fail('תאריך לא תקין');
+      var chosen = [];
+      (p.ideaIds || []).forEach(function (id) {
+        var row = rowById('ideas', id);
+        if (row && chosen.indexOf(row) < 0) chosen.push(row);
+      });
+      if (!chosen.length) fail('בחרו מה עשיתם');
+      if (chosen.length > 2) fail('אפשר לשלב עד שני רעיונות בערב אחד');
+      var places = chosen.map(function (row) { return row.place === 'out' ? 'out' : 'home'; });
+      var id = newId('h');
+      return { created: id, ops: [{ op: 'append', table: 'history', row: {
+        id: id, date: date,
+        ideaIds: chosen.map(function (row) { return row.id; }).join(','),
+        titles: chosen.map(function (row) { return row.title; }).join(' + '),
+        type: places.indexOf('home') >= 0 && places.indexOf('out') >= 0 ? 'combo' : places[0],
+        note: clean(p.note, 200), createdBy: clean(p.createdBy, 20), createdAt: stamp()
+      } }] };
+    },
+
+    // דירוג 0 פירושו "בלי דירוג". שורה אחת לכל זוג של ערב ומדרג, כך ששני דירוגים באותו רגע לא דורסים זה את זה.
+    rate: function (p) {
+      var stars = Math.round(Number(p.stars));
+      if (!(stars >= 0 && stars <= 5)) fail('דירוג לא תקין');
+      if (!rowById('members', p.memberId)) fail('לא מצאנו את מי שמדרג');
+      if (!rowById('history', p.historyId)) fail('הרשומה לא נמצאה');
+      return { ops: [{ op: 'upsert', table: 'ratings', match: { historyId: p.historyId, memberId: p.memberId },
+        row: { historyId: p.historyId, memberId: p.memberId, stars: String(stars), createdAt: stamp() } }] };
+    },
+
+    deleteHistory: function (p) {
+      if (!rowById('history', p.id)) fail('הרשומה לא נמצאה');
+      return { ops: [
+        { op: 'remove', table: 'history', match: { id: p.id } },
+        { op: 'remove', table: 'ratings', match: { historyId: p.id } }
+      ] };
+    },
+
+    setVotesPerPerson: function (p) {
+      var n = Math.round(Number(p.value));
+      if (!(n >= 1 && n <= 5)) fail('אפשר לבחור בין 1 ל-5 לבבות');
+      return { ops: [setting('votesPerPerson', n)] };
+    },
+
+    setFamilyCode: function (p) { return { ops: [{ op: 'setCode', code: String(p.code || '').trim() }] }; }
+  };
 
   function rpc(action, payload) {
-    if (!REAL) {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          try { resolve(demoApi(action, payload || {})); } catch (e) { reject(e); }
-        }, 150);
-      });
+    var plan;
+    try {
+      if (!ACTIONS[action]) fail('פעולה לא מוכרת: ' + action);
+      plan = ACTIONS[action](payload || {});
+    } catch (e) {
+      return Promise.reject(e);
     }
-    // הגוף נשלח כטקסט פשוט, כדי שהדפדפן לא ישלח לפני כן בקשת הכנה ש-Apps Script לא עונה עליה
-    return fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: action, payload: payload || {}, code: UI.code }),
-      redirect: 'follow'
-    }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(function (data) {
-      if (data && data.ok) return data;
-      var err = new Error((data && data.error) || '');
-      err.reason = (data && data.reason) || '';
-      throw err;
+    return door(plan.ops).then(function () { return { state: S, created: plan.created || null }; });
+  }
+
+  /* ================= שינויים שמגיעים מהמאגר ================= */
+
+  // data/patches.json במאגר הוא הדרך לשנות נתונים בלי לפתוח את הגיליון.
+  // כל שינוי שם מוחל על הגיליון פעם אחת, בפתיחה הבאה של האפליקציה אצל מישהו מהמשפחה.
+  var PATCHES = {
+    addIdea: function (c, titles) {
+      var title = clean(c.title, 60);
+      if (!title || titles[title]) return []; // רעיון שכבר קיים (גם אם הוסר) לא מתווסף שוב
+      titles[title] = true;
+      var place = c.place === 'out' ? 'out' : 'home';
+      return [{ op: 'append', table: 'ideas', row: {
+        id: newId('i'), title: title, pic: clean(c.pic, 12) || placePic(place), place: place,
+        note: clean(c.note, 140), addedBy: '', createdAt: stamp(), archived: ''
+      } }];
+    },
+    editIdea: function (c) {
+      var from = c.set || {};
+      var set = {};
+      if (from.title !== undefined && clean(from.title, 60)) set.title = clean(from.title, 60);
+      if (from.pic !== undefined && clean(from.pic, 12)) set.pic = clean(from.pic, 12);
+      if (from.place !== undefined) set.place = from.place === 'out' ? 'out' : 'home';
+      if (from.note !== undefined) set.note = clean(from.note, 140);
+      return Object.keys(set).length ? [{ op: 'update', table: 'ideas', match: { title: clean(c.title, 60) }, set: set }] : [];
+    },
+    removeIdea: function (c) { return [{ op: 'update', table: 'ideas', match: { title: clean(c.title, 60) }, set: { archived: '1' } }]; },
+    restoreIdea: function (c) { return [{ op: 'update', table: 'ideas', match: { title: clean(c.title, 60) }, set: { archived: '' } }]; },
+    editMember: function (c) {
+      var from = c.set || {};
+      var set = {};
+      if (from.name !== undefined && clean(from.name, 30)) set.name = clean(from.name, 30);
+      if (from.emoji !== undefined && clean(from.emoji, 8)) set.emoji = clean(from.emoji, 8);
+      if (from.active !== undefined) set.active = from.active ? '1' : '';
+      return Object.keys(set).length ? [{ op: 'update', table: 'members', match: { name: clean(c.name, 30) }, set: set }] : [];
+    },
+    setHearts: function (c) {
+      var n = Math.round(Number(c.value));
+      return n >= 1 && n <= 5 ? [setting('votesPerPerson', n)] : [];
+    },
+    removeEvening: function (c) {
+      var ops = [];
+      rowsOf('history').forEach(function (x) {
+        if (x.date !== c.date || (c.titles && x.titles !== c.titles)) return;
+        ops.push({ op: 'remove', table: 'history', match: { id: x.id } });
+        ops.push({ op: 'remove', table: 'ratings', match: { historyId: x.id } });
+      });
+      return ops;
+    }
+  };
+
+  function applyPatch(patch) {
+    var titles = {};
+    rowsOf('ideas').forEach(function (r) { titles[r.title] = true; });
+    var ops = [];
+    (Array.isArray(patch.changes) ? patch.changes : []).forEach(function (c) {
+      var make = c && PATCHES[c.do];
+      if (make) ops = ops.concat(make(c, titles));
     });
+    var key = 'patch:' + patch.id;
+    ops.push(setting(key, stamp()));
+    // הדלת מדלגת אם מכשיר אחר כבר החיל את השינוי הזה באותו רגע
+    return door(ops, { table: 'settings', match: { key: key } });
+  }
+
+  function applyPatches() {
+    if (!REAL) return Promise.resolve(0);
+    return fetch('data/patches.json', { cache: 'no-store' })
+      .then(function (res) { return res.ok ? res.json() : []; })
+      .then(function (list) {
+        var done = {};
+        rowsOf('settings').forEach(function (r) { if (r.key.indexOf('patch:') === 0) done[r.key.slice(6)] = true; });
+        var pending = (Array.isArray(list) ? list : []).filter(function (patch) {
+          return patch && /^[A-Za-z0-9_.-]{1,50}$/.test(String(patch.id)) && !done[patch.id];
+        });
+        return pending.reduce(function (chain, patch) {
+          return chain.then(function () { return applyPatch(patch); });
+        }, Promise.resolve()).then(function () { return pending.length; });
+      })
+      .catch(function (err) { if (window.console) console.warn('patches', err); return 0; });
   }
 
   // מריץ פעולה, מעדכן את המצב ומצייר מחדש. מחזיר null אם הפעולה נכשלה (אחרי הודעה למשתמש).
@@ -1400,87 +1702,56 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
 
   /* ================= תצוגת הדגמה (בלי גיליון) ================= */
 
+  // דלת מדומה בזיכרון: אותן פעולות על שורות, בלי לגעת בגיליון
   var D = null;
-  function demoToday() {
-    var n = new Date();
-    return ymd(new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())));
+  function demoFind(name, match) {
+    return (D[name] || []).filter(function (r) {
+      return Object.keys(match).every(function (k) { return String(r[k] === undefined ? '' : r[k]) === String(match[k]); });
+    });
   }
-  function demoInit() {
-    var week = nextThursday(demoToday());
+  function demoDoor(req) {
+    if (!D) D = demoTables();
+    var skipped = !!(req.unless && demoFind(req.unless.table, req.unless.match).length);
+    if (!skipped) {
+      req.ops.forEach(function (op) {
+        var rows = D[op.table] || (D[op.table] = []);
+        var hits = op.match ? demoFind(op.table, op.match) : [];
+        if (op.op === 'append') rows.push(Object.assign({}, op.row));
+        else if (op.op === 'update') hits.forEach(function (r) { Object.assign(r, op.set); });
+        else if (op.op === 'upsert') { if (hits.length) hits.forEach(function (r) { Object.assign(r, op.row); }); else rows.push(Object.assign({}, op.row)); }
+        else if (op.op === 'remove') D[op.table] = rows.filter(function (r) { return hits.indexOf(r) < 0; });
+      });
+    }
+    return { ok: true, skipped: skipped, hasCode: true, now: new Date().toISOString(), tables: JSON.parse(JSON.stringify(D)) };
+  }
+  function demoTables() {
+    var week = nextThursday(dayIn(new Date().toISOString()));
     var seeds = [
       ['ערב סרט עם פופקורן', '🎬 🍿', 'home'], ['משחקי קופסה', '🎲 🧩', 'home'], ['מכינים פיצה ביחד', '🍕 🍳', 'home'],
-      ['קריוקי בסלון', '🎤 🎶', 'home'], ["אוהל בסלון ומסיבת פיג'מות", '⛺ 🛌', 'home'], ['גלידה וטיול ערב', '🍦 🚶', 'out'],
+      ['ערב קריוקי', '🎤 🎶', 'home'], ["אוהל בסלון ומסיבת פיג'מות", '⛺ 🛌', 'home'], ['גלידה וטיול ערב', '🍦 🚶', 'out'],
       ['באולינג', '🎳', 'out'], ['פיקניק שקיעה בפארק', '🧺 🌅', 'out'], ['מסעדה שכולם בוחרים יחד', '🍽️', 'out'],
       ['גן שעשועים בחושך עם פנסים', '🎠 🔦', 'out']
     ];
-    D = {
-      seq: 100,
-      members: [
-        { id: 'm1', name: 'אבא', emoji: '🦁', active: true }, { id: 'm2', name: 'אמא', emoji: '🦊', active: true },
-        { id: 'm3', name: 'נועה', emoji: '🦄', active: true }, { id: 'm4', name: 'מיקה', emoji: '🐼', active: true }
-      ],
-      ideas: seeds.map(function (s, n) { return { id: 'd' + (n + 1), title: s[0], pic: s[1], place: s[2], note: '', addedBy: '', archived: false }; }),
-      votes: [
-        { memberId: 'm2', ideaId: 'd6' }, { memberId: 'm2', ideaId: 'd1' },
-        { memberId: 'm3', ideaId: 'd6' }, { memberId: 'm3', ideaId: 'd5' }
-      ],
+    return {
+      members: [['m1', 'אבא', '🦁'], ['m2', 'אמא', '🦊'], ['m3', 'נועה', '🦄'], ['m4', 'מיקה', '🐼']].map(function (m) {
+        return { id: m[0], name: m[1], emoji: m[2], active: '1', createdAt: '' };
+      }),
+      ideas: seeds.map(function (seed, n) {
+        return { id: 'd' + (n + 1), title: seed[0], pic: seed[1], place: seed[2], note: '', addedBy: '', createdAt: '', archived: '' };
+      }),
+      votes: [['m2', 'd6'], ['m2', 'd1'], ['m3', 'd6'], ['m3', 'd5']].map(function (v) {
+        return { weekId: week, memberId: v[0], ideaId: v[1], createdAt: '' };
+      }),
       history: [
-        { id: 'h1', date: addDays(week, -7), ideaIds: ['d7'], titles: 'באולינג', type: 'out', note: 'נועה עשתה סטרייק', ratings: { m1: 4, m2: 5, m3: 5 } },
-        { id: 'h2', date: addDays(week, -14), ideaIds: ['d6', 'd1'], titles: 'גלידה וטיול ערב + ערב סרט עם פופקורן', type: 'combo', note: '', ratings: { m1: 5, m3: 4, m4: 5 } },
-        { id: 'h3', date: addDays(week, -21), ideaIds: ['d2'], titles: 'משחקי קופסה', type: 'home', note: '', ratings: { m2: 3 } }
+        { id: 'h1', date: addDays(week, -7), ideaIds: 'd7', titles: 'באולינג', type: 'out', note: 'נועה עשתה סטרייק', createdBy: 'm1', createdAt: '' },
+        { id: 'h2', date: addDays(week, -14), ideaIds: 'd6,d1', titles: 'גלידה וטיול ערב + ערב סרט עם פופקורן', type: 'combo', note: '', createdBy: 'm2', createdAt: '' },
+        { id: 'h3', date: addDays(week, -21), ideaIds: 'd2', titles: 'משחקי קופסה', type: 'home', note: '', createdBy: 'm2', createdAt: '' }
       ],
-      settings: { votesPerPerson: 3, revealedWeek: '', hasCode: true }
+      ratings: [['h1', 'm1', 4], ['h1', 'm2', 5], ['h1', 'm3', 5], ['h2', 'm1', 5], ['h2', 'm3', 4], ['h2', 'm4', 5], ['h3', 'm2', 3]].map(function (r) {
+        return { historyId: r[0], memberId: r[1], stars: String(r[2]), createdAt: '' };
+      }),
+      settings: [{ key: 'votesPerPerson', value: '3' }]
     };
-  }
-  function demoApi(action, p) {
-    if (!D) demoInit();
-    var today = demoToday();
-    var weekId = nextThursday(today);
-    var created = null;
-    function byId(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
-    if (action === 'addMember') {
-      created = 'm' + (++D.seq);
-      D.members.push({ id: created, name: p.name, emoji: p.emoji || '🙂', active: true });
-    } else if (action === 'updateMember') {
-      var mm = byId(D.members, p.id);
-      if (p.name !== undefined) mm.name = p.name;
-      if (p.emoji !== undefined) mm.emoji = p.emoji;
-      if (p.active !== undefined) mm.active = !!p.active;
-    } else if (action === 'addIdea') {
-      created = 'd' + (++D.seq);
-      D.ideas.push({ id: created, title: p.title, pic: p.pic || placePic(p.place), place: p.place === 'out' ? 'out' : 'home', note: p.note || '', addedBy: p.addedBy || '', archived: false });
-    } else if (action === 'updateIdea') {
-      var ii = byId(D.ideas, p.id);
-      ['title', 'pic', 'note'].forEach(function (k) { if (p[k] !== undefined) ii[k] = p[k]; });
-      if (p.place !== undefined) ii.place = p.place === 'out' ? 'out' : 'home';
-      if (p.archived !== undefined) ii.archived = !!p.archived;
-    } else if (action === 'setVotes') {
-      D.votes = D.votes.filter(function (v) { return v.memberId !== p.memberId; });
-      (p.ideaIds || []).forEach(function (id) { D.votes.push({ memberId: p.memberId, ideaId: id }); });
-    } else if (action === 'reveal') {
-      D.settings.revealedWeek = weekId;
-    } else if (action === 'markDone') {
-      var chosen = (p.ideaIds || []).map(function (id) { return byId(D.ideas, id); }).filter(Boolean);
-      var places = chosen.map(function (i) { return i.place; });
-      created = 'h' + (++D.seq);
-      D.history.push({
-        id: created, date: p.date, ideaIds: chosen.map(function (i) { return i.id; }),
-        titles: chosen.map(function (i) { return i.title; }).join(' + '),
-        type: places.indexOf('home') >= 0 && places.indexOf('out') >= 0 ? 'combo' : places[0],
-        note: p.note || '', ratings: {}
-      });
-    } else if (action === 'rate') {
-      var hh = byId(D.history, p.historyId);
-      if (p.stars) hh.ratings[p.memberId] = p.stars; else delete hh.ratings[p.memberId];
-    } else if (action === 'deleteHistory') {
-      D.history = D.history.filter(function (x) { return x.id !== p.id; });
-    } else if (action === 'setVotesPerPerson') {
-      D.settings.votesPerPerson = p.value;
-    }
-    return JSON.parse(JSON.stringify({
-      created: created,
-      state: { today: today, weekId: weekId, members: D.members, ideas: D.ideas, votes: D.votes, history: D.history, settings: D.settings, appUrl: '' }
-    }));
   }
 
   /* ================= הפעלה ================= */
@@ -1494,6 +1765,7 @@ body.busy .btn-main{opacity:.6;pointer-events:none}
     if (id && member(id)) { UI.me = id; saveMe(id); }
     if (!S.members.length) UI.setup = true;
     render();
+    applyPatches().then(function (applied) { if (applied) render(); });
   }
 
   function boot() {
